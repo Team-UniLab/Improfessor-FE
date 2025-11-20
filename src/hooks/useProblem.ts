@@ -149,7 +149,7 @@ export const useProblem = () => {
         htmlContent += `
           <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
             <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #333;">
-              문제 ${problem.number}
+              문제 ${problem.problemId}
             </h3>
             
             <div style="margin-bottom: 15px;">
