@@ -156,8 +156,7 @@ export default function GeneratePage() {
       });
 
       const state = {
-        problems: response.data.problems,
-        downloadKey: response.data.downloadKey,
+        problems: response.data.problems
       };
       router.push(`/result?state=${encodeURIComponent(JSON.stringify(state))}`);
     } catch (error) {

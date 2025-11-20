@@ -70,12 +70,12 @@ export default function ResultPage() {
             <div className="space-y-6">
               {problems.map((problem) => (
                 <div
-                  key={problem.number}
+                  key={problem.problemId}
                   className="border border-[#BCCCDC] rounded-lg p-6"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-lg font-semibold text-black">
-                      문제 {problem.number}
+                      문제 {problem.problemId}
                     </h3>
                   </div>
                   

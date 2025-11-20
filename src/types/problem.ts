@@ -1,12 +1,13 @@
 export interface Problem {
-  number: string;
+  problemId: number;
+  type: string;
   content: string;
   description: string;
   answer: string;
 }
 
 export interface GenerateProblemData {
-  downloadKey: string;
+  fileName: string;
   problems: Problem[];
   problemCount: number;
   message: string;
