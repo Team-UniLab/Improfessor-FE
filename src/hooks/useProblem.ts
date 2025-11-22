@@ -145,12 +145,17 @@ export const useProblem = () => {
         </div>
       `;
 
-      problems.forEach((problem) => {
+      problems.forEach((problem, index) => {
         htmlContent += `
           <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
             <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #333;">
-              문제 ${problem.problemId}
+              문제 ${index+1}
             </h3>
+            
+            <div style="margin-bottom: 15px;">
+              <h4 style="font-weight: bold; margin-bottom: 8px; color: #555;">문제 유형</h4>
+              <p style="color: #333; white-space: pre-wrap;">${problem.type}</p>
+            </div>
             
             <div style="margin-bottom: 15px;">
               <h4 style="font-weight: bold; margin-bottom: 8px; color: #555;">문제 내용</h4>
