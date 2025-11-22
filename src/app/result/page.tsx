@@ -68,18 +68,25 @@ export default function ResultPage() {
             </div>
 
             <div className="space-y-6">
-              {problems.map((problem) => (
+              {problems.map((problem, index) => (
                 <div
                   key={problem.problemId}
                   className="border border-[#BCCCDC] rounded-lg p-6"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-lg font-semibold text-black">
-                      문제 {problem.problemId}
+                      문제 {index + 1}
                     </h3>
                   </div>
-                  
+
                   <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-black mb-2">문제 유형</h4>
+                      <p className="text-gray-700 whitespace-pre-wrap">
+                        {problem.type}
+                      </p>
+                    </div>
+
                     <div>
                       <h4 className="font-medium text-black mb-2">문제 내용</h4>
                       <p className="text-gray-700 whitespace-pre-wrap">
@@ -88,12 +95,12 @@ export default function ResultPage() {
                     </div>
 
                     {problem.description && (
-                      <div>
-                        <h4 className="font-medium text-black mb-2">설명</h4>
-                        <p className="text-gray-700 whitespace-pre-wrap">
-                          {problem.description}
-                        </p>
-                      </div>
+                        <div>
+                          <h4 className="font-medium text-black mb-2">설명</h4>
+                          <p className="text-gray-700 whitespace-pre-wrap">
+                            {problem.description}
+                          </p>
+                        </div>
                     )}
 
                     <div>
@@ -109,7 +116,7 @@ export default function ResultPage() {
 
             <div className="mt-8 text-center">
               <button
-                onClick={() => router.push('/generate')}
+                  onClick={() => router.push('/generate')}
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 새로운 문제 생성하기
