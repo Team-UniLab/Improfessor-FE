@@ -7,6 +7,7 @@ import useAuth from "@/hooks/useAuth";
 import { useAlert } from "@/context/AlertContext";
 import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/auth";
+import styled from "styled-components";
 
 export default function LoginPage() {
   const router = useRouter();
