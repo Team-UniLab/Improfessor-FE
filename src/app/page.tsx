@@ -41,7 +41,9 @@ const Wrapper = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("/background.gif");
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%),
+    url("/background.gif") center/cover no-repeat;
 `;
 
 const Card = styled.div`
