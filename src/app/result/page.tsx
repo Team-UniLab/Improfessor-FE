@@ -5,8 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Header from "@/components/Header";
 import { Problem } from '@/types/problem';
 import useProblem from '@/hooks/useProblem';
+import styled from 'styled-components';
 
-export default function ResultPage() {
+const ResultPage =()=> {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { downloadProblemPDF } = useProblem();
@@ -44,87 +45,149 @@ export default function ResultPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <Wrapper>
       <Header />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-6 py-8">
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-2xl font-bold text-black">
-                생성된 문제
-              </h1>
-              <button
-                onClick={handleDownload}
-                disabled={isLoading || !problems.length}
-                className={`px-4 py-2 rounded-md transition-colors ${
-                  isLoading
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : 'bg-[#D9EAFD] hover:bg-[#BCCCDC]'
-                } text-black`}
-              >
-                {isLoading ? '다운로드 중...' : 'PDF 다운로드'}
-              </button>
-            </div>
 
-            <div className="space-y-6">
-              {problems.map((problem, index) => (
-                <div
-                  key={problem.problemId}
-                  className="border border-[#BCCCDC] rounded-lg p-6"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-semibold text-black">
-                      문제 {index + 1}
-                    </h3>
-                  </div>
+      <ContentWrapper>
+        <ResultCard>
+          <TopBar>
+            <Title>생성된 문제</Title>
 
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-black mb-2">문제 유형</h4>
-                      <p className="text-gray-700 whitespace-pre-wrap">
-                        {problem.type}
-                      </p>
-                    </div>
+            <PDFButton onClick={handleDownload} disabled={isLoading}>
+              {isLoading ? "다운로드 중..." : "PDF 다운로드"}
+            </PDFButton>
+          </TopBar>
 
-                    <div>
-                      <h4 className="font-medium text-black mb-2">문제 내용</h4>
-                      <p className="text-gray-700 whitespace-pre-wrap">
-                        {problem.content}
-                      </p>
-                    </div>
+          <ProblemsWrapper>
+            {problems.map((problem, index) => (
+              <ProblemCard key={index}>
+                <ProblemTitle>문제 {index + 1}</ProblemTitle>
 
-                    {problem.description && (
-                        <div>
-                          <h4 className="font-medium text-black mb-2">설명</h4>
-                          <p className="text-gray-700 whitespace-pre-wrap">
-                            {problem.description}
-                          </p>
-                        </div>
-                    )}
+                <Section>
+                  <SectionLabel>문제 내용</SectionLabel>
+                  <SectionText>{problem.content}</SectionText>
+                </Section>
 
-                    <div>
-                      <h4 className="font-medium text-black mb-2">정답</h4>
-                      <p className="text-gray-700 whitespace-pre-wrap">
-                        {problem.answer}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                {problem.description && (
+                  <Section>
+                    <SectionLabel>설명</SectionLabel>
+                    <SectionText>{problem.description}</SectionText>
+                  </Section>
+                )}
 
-            <div className="mt-8 text-center">
-              <button
-                  onClick={() => router.push('/generate')}
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                새로운 문제 생성하기
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+                <Section>
+                  <SectionLabel>정답</SectionLabel>
+                  <SectionText>{problem.answer}</SectionText>
+                </Section>
+              </ProblemCard>
+            ))}
+          </ProblemsWrapper>
+        </ResultCard>
+        <BottomButton onClick={() => router.push('/generate')}>
+            새로운 문제 생성하기
+          </BottomButton>
+      </ContentWrapper>
+    </Wrapper>
   );
-} 
+}
+export default ResultPage;
+
+const Wrapper = styled.div`
+  min-height: 100vh;
+  background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
+`;
+
+const ContentWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 77px 120px 180px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ResultCard = styled.div`
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.10);
+  max-width: 1100px;
+  padding: 30px 50px;
+  color: white;
+`;
+
+const TopBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 43px;
+`;
+
+const Title = styled.h1`
+  font-size: 30px;
+  font-weight: 600;
+  color: white;
+`;
+
+const PDFButton = styled.button`
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.80);
+  font-size: 20px;
+  font-weight: 600;
+  color: #405348;
+  cursor: pointer;
+
+  &:disabled {cursor: not-allowed; }
+`;
+
+const ProblemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 43px;
+`;
+
+const ProblemCard = styled.div`
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid var(--white-50, rgba(255, 255, 255, 0.50));
+  background: rgba(255, 255, 255, 0.10);
+  max-width: 1008px;
+`;
+
+const ProblemTitle = styled.h2`
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 30px;
+`;
+
+const Section = styled.div`
+   margin-bottom: 24px;
+`;
+
+const SectionLabel = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+`;
+
+const SectionText = styled.div`
+  color: rgba(255,255,255,0.9);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  white-space: pre-wrap;
+`;
+
+const BottomButton = styled.button`
+  margin-top: 77px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%;
+  text-decoration: underline;
+  cursor: pointer;
+`;
