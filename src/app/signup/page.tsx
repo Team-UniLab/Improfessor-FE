@@ -186,7 +186,7 @@ import BackIcon from "@/assets/buttons/back.svg";
         recommendCount: formData.referralCode ? 1 : 0
       });
       showAlert("회원가입이 완료되었습니다.");
-      router.push("/login");
+      router.push(`/signup/complete?name=${formData.nickname}`);
     } catch (error) {
       console.error('회원가입 실패:', error);
       if (error instanceof AxiosError && error.response?.data) {
@@ -249,7 +249,7 @@ return(
 
             {/* 닉네임 */}
             <Field>
-              <Label>닉네임</Label>
+              <Label1>닉네임</Label1>
               <Column>
               <Row>
               <Input
@@ -269,7 +269,7 @@ return(
 
             {/* 비밀번호 */}
             <Field>
-              <Label>비밀번호</Label>
+              <Label1>비밀번호</Label1>
               <Column>
               <Input
                 id="password"
@@ -305,6 +305,7 @@ return(
                 placeholder="대학교를 입력하세요 (선택)"
               />
               <Button type="button">
+              {/* // onClick={() => setIsUniversityModalOpen(true)} */}
                   검색
                 </Button>
                 </Row>
@@ -321,6 +322,7 @@ return(
                 placeholder="학과를 입력하세요 (선택)"
               />
               <Button type="button">
+              {/* onClick={() => setIsMajorModalOpen(true)}> */}
                   검색
                 </Button>
                 </Row>
@@ -430,6 +432,19 @@ const Label = styled.label`
   align-items: center;
   margin-right: 20px;
   width: 150px;
+`;
+
+const Label1 = styled.label`
+  display: flex;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; 
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
+  width: 150px;
+  margin-bottom: 17px;
 `;
 
 const Row = styled.div`
