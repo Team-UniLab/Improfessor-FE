@@ -9,8 +9,10 @@ import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/auth";
 import UniversitySearchModal from "@/components/UniversitySearchModal";
 import MajorSearchModal from "@/components/MajorSearchModal";
+import styled from "styled-components";
+import BackIcon from "@/assets/buttons/back.svg";
 
-export default function SignupPage() {
+  const SignupPage=()=> {
   const router = useRouter();
   const { useSendVerificationEmail, useVerifyEmail, useRegister } = useAuth();
   const sendVerification = useSendVerificationEmail();
@@ -184,7 +186,7 @@ export default function SignupPage() {
         recommendCount: formData.referralCode ? 1 : 0
       });
       showAlert("회원가입이 완료되었습니다.");
-      router.push("/login");
+      router.push(`/signup/complete?name=${formData.nickname}`);
     } catch (error) {
       console.error('회원가입 실패:', error);
       if (error instanceof AxiosError && error.response?.data) {
@@ -196,243 +198,348 @@ export default function SignupPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#D9EAFD] to-[#F8FAFC] relative">
-      <div 
-        className="absolute inset-0 w-full h-full"
-        style={{
-          backgroundImage: 'url("/background.gif")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: '0.3',
-        }}
-      />
-      <Link 
-        href="/"
-        className="absolute top-6 left-6 text-black hover:text-[#BCCCDC] transition-colors z-50"
-      >
-        <svg 
-          className="w-6 h-6" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </Link>
+return(
+<Wrapper>
+      <BackButton href="/">
+        <BackIcon width={40} height={40} />
+      </BackButton>
 
-      <div className="flex items-center justify-center min-h-screen py-12 relative z-10">
-        <div className="bg-white p-8 shadow-lg w-full max-w-md rounded-lg">
-          <h1 className="text-4xl font-bold text-center text-black mb-8">회원가입</h1>
-          
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-black mb-2">
-                이메일 <span className="text-black/50">*</span>
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="email"
+      <Center>
+        <Card>
+          <Title>회원가입</Title>
+
+          <form onSubmit={handleSubmit}>
+            {/* 이메일 */}
+            <Field>
+              <Label>이메일</Label>
+              <Row>
+                <Input
                   id="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                  placeholder="your@email.com"
-                  required
                   disabled={isEmailVerified}
+                  placeholder="이메일을 입력하세요(필수)"
                 />
-                <button
+                <Button
                   type="button"
                   onClick={handleSendVerification}
-                  disabled={isEmailVerified || sendVerification.isPending}
-                  className="px-4 py-2 bg-[#D9EAFD] text-black rounded-lg hover:bg-[#BCCCDC] transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isEmailVerified}
                 >
-                  {sendVerification.isPending ? "전송 중..." : "인증번호 전송"}
-                </button>
-              </div>
-            </div>
+                  인증번호 전송
+                </Button>
+              </Row>
+            </Field>
 
-            <div>
-              <label htmlFor="verificationCode" className="block text-sm font-medium text-black mb-2">
-                인증번호 <span className="text-black/50">*</span>
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
+            {/* 인증코드 */}
+            <Field>
+              <Label>인증번호</Label>
+              <Row>
+                <Input
                   id="verificationCode"
                   value={formData.verificationCode}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                  placeholder="인증번호"
-                  required
                   disabled={isEmailVerified}
-                  maxLength={36}
+                  placeholder="인증번호를 입력하세요"
                 />
-                <button
-                  type="button"
-                  onClick={handleVerifyEmail}
-                  disabled={isEmailVerified || verifyEmail.isPending}
-                  className="px-4 py-2 bg-[#D9EAFD] text-black rounded-lg hover:bg-[#BCCCDC] transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {verifyEmail.isPending ? "확인 중..." : "확인"}
-                </button>
-              </div>
-            </div>
+                <Button type="button" onClick={handleVerifyEmail}>
+                  확인
+                </Button>
+              </Row>
+            </Field>
 
-            <div>
-              <label htmlFor="nickname" className="block text-sm font-medium text-black mb-2">
-                닉네임 <span className="text-black/50">*</span>
-              </label>
-              <input
-                type="text"
+            {/* 닉네임 */}
+            <Field>
+              <Label1>닉네임</Label1>
+              <Column>
+              <Row>
+              <Input
                 id="nickname"
                 value={formData.nickname}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="닉네임을 입력해주세요"
-                required
+                placeholder="닉네임을 입력하세요 (필수)"
               />
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-black mb-2">
-                비밀번호 <span className="text-black/50">*</span>
-              </label>
-              <input
-                type="password"
+              <Button type="button">
+                  중복 확인
+                </Button>
+              </Row>
+              <Text1>최소 4~8자, 한영 문자, 숫자 포함</Text1>
+              </Column>
+              
+            </Field>
+
+            {/* 비밀번호 */}
+            <Field>
+              <Label1>비밀번호</Label1>
+              <Column>
+              <Input
                 id="password"
+                type="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 bg-white border rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50 ${
-                  formData.password ? (passwordValidation.isValid ? 'border-green-500' : 'border-red-500') : 'border-[#BCCCDC]'
-                }`}
-                placeholder="비밀번호를 입력해주세요"
-                required
+                placeholder="비밀번호를 입력하세요 (필수)"
               />
-              {formData.password && (
-                <div className="mt-2 space-y-1">
-                  <div className={`text-xs flex items-center gap-1 ${passwordValidation.hasMinLength ? 'text-green-600' : 'text-red-600'}`}>
-                    <span>{passwordValidation.hasMinLength ? '✓' : '✗'}</span>
-                    최소 8자 이상
-                  </div>
-                  <div className={`text-xs flex items-center gap-1 ${passwordValidation.hasLetter ? 'text-green-600' : 'text-red-600'}`}>
-                    <span>{passwordValidation.hasLetter ? '✓' : '✗'}</span>
-                    영문 포함
-                  </div>
-                  <div className={`text-xs flex items-center gap-1 ${passwordValidation.hasNumber ? 'text-green-600' : 'text-red-600'}`}>
-                    <span>{passwordValidation.hasNumber ? '✓' : '✗'}</span>
-                    숫자 포함
-                  </div>
-                  <div className={`text-xs flex items-center gap-1 ${passwordValidation.hasSpecialChar ? 'text-green-600' : 'text-red-600'}`}>
-                    <span>{passwordValidation.hasSpecialChar ? '✓' : '✗'}</span>
-                    특수문자 포함 (!@#$%^&*(),.?&quot;:{}|&lt;&gt;)
-                  </div>
-                </div>
-              )}
-            </div>
+              <Text>최소 8자 이상, 영문, 숫자, 특수 기호 포함 </Text>
+              </Column>
+            </Field>
 
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-black mb-2">
-                비밀번호 확인 <span className="text-black/50">*</span>
-              </label>
-              <input
-                type="password"
+            {/* 비밀번호 확인 */}
+            <Field>
+              <Label>비밀번호 확인</Label>
+              <Input
                 id="confirmPassword"
+                type="password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="비밀번호를 다시 입력해주세요"
-                required
+                placeholder="비밀번호를 다시 입력하세요 (필수)"
               />
-            </div>
+            </Field>
 
-            <div>
-              <label
-                htmlFor="university"
-                className="block text-sm font-medium text-black mb-2"
-              >
-                대학교 <span className="text-black/50">(선택)</span>
-              </label>
-              <input
-                type="text"
+            {/* 대학교 */}
+            <Field>
+              <Label>대학교 (선택)</Label>
+              <Row>
+              <Input
                 id="university"
                 value={formData.university}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="대학교를 입력해주세요"
+                placeholder="대학교를 입력하세요 (선택)"
               />
-            </div>
+              <Button type="button">
+              {/* // onClick={() => setIsUniversityModalOpen(true)} */}
+                  검색
+                </Button>
+                </Row>
+            </Field>
 
-            <div>
-              <label
-                htmlFor="major"
-                className="block text-sm font-medium text-black mb-2"
-              >
-                학과 <span className="text-black/50">(선택)</span>
-              </label>
-              <input
-                type="text"
+            {/* 학과 */}
+            <Field>
+              <Label>학과 (선택)</Label>
+              <Row>
+              <Input
                 id="major"
                 value={formData.major}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="학과를 입력해주세요"
+                placeholder="학과를 입력하세요 (선택)"
               />
-            </div>
+              <Button type="button">
+              {/* onClick={() => setIsMajorModalOpen(true)}> */}
+                  검색
+                </Button>
+                </Row>
+            </Field>
 
-            <div>
-              <label htmlFor="referralCode" className="block text-sm font-medium text-black mb-2">
-                추천인 코드 <span className="text-black/50">(선택)</span>
-              </label>
-              <input
-                type="text"
+            {/* 추천코드 */}
+            <Field>
+              <Label>추천인 코드 (선택)</Label>
+              <Column>
+              <Input
                 id="referralCode"
                 value={formData.referralCode}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="추천인 코드를 입력해주세요"
+                placeholder="추천인 코드를 입력하세요 (선택)"
               />
-            </div>
+              <Text>문제 생성 횟수가 3회 추가됩니다</Text>
+              </Column>
+            </Field>
 
-            <button
-              type="submit"
-              disabled={!isEmailVerified || register.isPending}
-              className="w-full bg-[#D9EAFD] text-black py-3 rounded-lg hover:bg-[#BCCCDC] transition mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {register.isPending ? "처리 중..." : "회원가입"}
-            </button>
+            <SubmitButton type="submit" disabled={register.isPending}>
+              회원가입
+            </SubmitButton>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-black">
-              이미 계정이 있으신가요?{" "}
-              <Link href="/login" className="text-black hover:text-[#BCCCDC] transition">
-                로그인
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+          <BottomText>
+            이미 계정이 있으신가요?
+            <Link href="/login">로그인</Link>
+          </BottomText>
+        </Card>
+      </Center>
 
+      {/* 모달들 */}
       <UniversitySearchModal
         isOpen={isUniversityModalOpen}
         onClose={() => setIsUniversityModalOpen(false)}
-        onSelect={handleUniversitySelect}
+        onSelect={(u, id) => {
+          setFormData((f) => ({ ...f, university: u, universityId: id }));
+        }}
       />
-      
+
       <MajorSearchModal
         isOpen={isMajorModalOpen}
         onClose={() => setIsMajorModalOpen(false)}
-        onSelect={handleMajorSelect}
+        onSelect={(major) => setFormData((f) => ({ ...f, major }))}
         selectedUniversity={formData.university}
         selectedUniversityId={formData.universityId}
       />
-    </div>
-  );
-} 
+    </Wrapper>
+)
+}
+export default SignupPage;
+
+
+const Wrapper = styled.div`
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.70) 0%, rgba(0, 0, 0, 0.70) 100%), 
+  url("/background.gif") lightgray 50% / cover no-repeat;
+`;
+
+const BackButton = styled(Link)`
+  position: absolute;
+  margin-top: 83px;
+  margin-left: 120px;
+  z-index: 10;
+`;
+
+const Center = styled.div`
+  min-height: 100vh;
+  padding-top: 135px;
+  display:flex;
+  justify-content:center;
+  //align-items:flex-start;
+
+`;
+
+const Card = styled.div`
+  //width: 100%;
+  border-radius: 18px;
+  color: white;
+
+`;
+
+const Title = styled.h1`
+  margin-bottom: 31px;
+  text-align:center;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+`;
+
+const Field = styled.div`
+  margin-bottom: 31px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+`;
+
+const Label = styled.label`
+  display: flex;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; 
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
+  width: 150px;
+`;
+
+const Label1 = styled.label`
+  display: flex;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; 
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
+  width: 150px;
+  margin-bottom: 17px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 22px;
+`;
+
+const Input = styled.input`
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  background: rgba(255, 255, 255, 0.30);
+  color:white;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  width: 328px;
+  height: 41px;
+`;
+
+const Button = styled.button`
+  height: 41px;
+  padding: 0 24px;
+  border-radius: 10px;
+  background: var(--white-30, rgba(255, 255, 255, 0.30));
+  color: white;
+  font-family: "Apple SD Gothic Neo";
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  cursor: pointer;
+
+`;
+
+const SubmitButton = styled.button`
+  width: 328px;
+  height: 41px;
+  padding: 0 24.957px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background: var(--black-100, linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), 
+  linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), 
+  linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #000);
+  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.70);
+  color: white;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  margin-left: 170px;
+  cursor: pointer;
+
+`;
+const Text = styled.div`
+  color: var(--white-100, #FFF);
+  text-align: right;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-right: 10px;
+`
+const Text1 = styled.div`
+  color: var(--white-100, #FFF);
+  text-align: right;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-right: 138px;
+`
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  `
+
+const BottomText = styled.div`
+  text-align:center;
+  margin-top: 50px;
+  color: var(--white-100, #FFF);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.30);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  a {
+    text-decoration: underline;
+    margin-left: 20px;
+
+    &:hover {
+      opacity:1;
+    }
+  }
+`;

@@ -7,8 +7,11 @@ import useAuth from "@/hooks/useAuth";
 import { useAlert } from "@/context/AlertContext";
 import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/auth";
+import styled from "styled-components";
+import KakaoImg from "@/assets/buttons/kakao.svg";
+import Back from "@/assets/buttons/back.svg";
 
-export default function LoginPage() {
+const LoginPage=() => {
   const router = useRouter();
   const { useLogin } = useAuth();
   const login = useLogin();
@@ -61,91 +64,196 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#D9EAFD] to-[#F8FAFC] relative">
-      <div 
-        className="absolute inset-0 w-full h-full"
-        style={{
-          backgroundImage: 'url("/background.gif")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: '0.3',
-        }}
-      />
-      <Link 
-        href="/"
-        className="absolute top-6 left-6 text-black hover:text-[#BCCCDC] transition-colors z-50"
-      >
-        <svg 
-          className="w-6 h-6" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth={2} 
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </Link>
-      
-      <div className="flex items-center justify-center min-h-screen relative z-10">
-        <div className="bg-white p-8 shadow-lg w-full max-w-md rounded-lg">
-          <h1 className="text-4xl font-bold text-center text-black mb-8">로그인</h1>
+    <Wrapper>
+      <BackButton href="/">
+      <Back width={40} height={40} />
+        </BackButton>
 
-          {/* 이메일/비밀번호 입력 */}
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="이메일 입력"
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-                placeholder="비밀번호 입력"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={login.isPending}
-              className="w-full bg-black text-white py-3 rounded-lg hover:bg-black/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {login.isPending ? "로그인 중..." : "로그인"}
-            </button>
-          </form>
+      <CenterContainer>
+        <Panel>
+          <Title>로그인</Title>
 
-          {/* 카카오로 계속하기 */}
-          <div className="mt-4">
-            <a
-              href={kakaoUrl}
-              className="block w-full py-3 rounded-lg text-center font-medium bg-[#FEE500] text-black hover:brightness-95 transition"
-            >
-              카카오톡으로 계속하기
-            </a>
-          </div>
+          {/* ID */}
+          <FieldRow>
+            <Label>ID</Label>
+            <InputBox
+              id="email"
+              value={formData.email}
+              placeholder="아이디를 입력하세요"
+              onChange={handleChange}
+            />
+          </FieldRow>
 
-          {/* 회원가입 링크 */}
-          <div className="mt-6 text-center">
-            <Link href="/signup" className="text-black/70 hover:text-black transition">
-              이메일로 회원가입
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+          {/* PW */}
+          <FieldRow>
+            <Label>PW</Label>
+            <InputBox
+              type="password"
+              id="password"
+              value={formData.password}
+              placeholder="비밀번호를 입력하세요"
+              onChange={handleChange}
+            />
+          </FieldRow>
+
+          <LoginButton onClick={handleSubmit}>
+            로그인
+          </LoginButton>
+
+          <Divider><span>or</span></Divider>
+
+          <KakaoButton href={kakaoUrl}>
+            <KakaoImg />
+          </KakaoButton>
+
+          <SignupText>
+            <Link href="/signup">이메일로 회원가입</Link>
+          </SignupText>
+        </Panel>
+      </CenterContainer>
+    </Wrapper>
   );
-} 
+}
+export default LoginPage;
+
+const Wrapper = styled.div`
+  min-height: 100vh;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.70) 0%, rgba(0,0,0,0.7) 100%),
+    url("/background.gif") center/cover no-repeat;
+  position: relative;
+`;
+
+const BackButton = styled(Link)`
+  position: absolute;
+  margin-top: 140px;
+  margin-left: 120px;
+  z-index: 10;
+  color: white;
+
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const CenterContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Panel = styled.div`
+  color: white;
+  //width: 420px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+`;
+
+const Title = styled.div`
+  color: #FFF;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-bottom: 32px;
+  margin-left: 50px;
+`;
+
+const FieldRow = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+`;
+
+const Label = styled.div`
+  width: 50px;
+  font-size: 18px;
+  font-style: normal; 
+  font-weight: 400;
+  line-height: normal;
+  text-align: right;
+  padding-right: 25px;
+`;
+
+const InputBox = styled.input`
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  background: rgba(255, 255, 255, 0.30);
+  color: white;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  width: 328px;
+  height: 41px;
+  &::placeholder {
+    color: white;
+  }
+  &:focus {
+    outline: none;
+    border-color: white;
+  }
+`;
+
+const LoginButton = styled.button`
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  width: 328px;
+  height: 41px;
+  padding: 0 24.957px;
+  border-radius: 10px;
+  background: var(--black-100, linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), 
+  linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #000);
+  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.70);
+  margin-left: 50px;
+`;
+
+const Divider = styled.div`
+  margin-left: 50px;
+  display: flex;
+  align-items: center;
+  color: white;
+  opacity: 0.7;
+  font-size: 14px;
+  margin-top: 35px;
+
+  &::before, &::after {
+    content: "";
+    flex: 1;
+    background: rgba(255,255,255,0.4);
+    height: 1px;
+  }
+
+  span {
+    margin: 0 12px;
+  }
+`;
+
+const KakaoButton = styled.a`
+  margin-left: 50px;
+  margin-top: 24px;
+`;
+
+const SignupText = styled.div`
+  margin-top: 46px;
+  text-align: center;
+  margin-left: 50px;
+  a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+  }
+`;
