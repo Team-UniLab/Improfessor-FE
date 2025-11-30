@@ -6,14 +6,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useProblem from "@/hooks/useProblem";
 import { useAlert } from "@/context/AlertContext";
 import { useUser } from "@/context/UserContext";
-import { axiosInstance } from "@/lib/axios";
 import styled from "styled-components";
 import UploadIcon from "@/assets/icons/upload.svg";
 import CheckIcon from "@/assets/icons/check.svg";
 
 const GeneratePage=() => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
   const { showAlert } = useAlert();
   const { user, isAuthenticated } = useUser();
   const [isLoading, setIsLoading] = useState(false);
