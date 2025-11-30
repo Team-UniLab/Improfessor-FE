@@ -1,22 +1,24 @@
 'use client';
 
 import { useState } from "react";
+import React from "react";
 import Header from "@/components/Header";
 import Pagination from "@/components/Pagination";
 import useNotice from "@/hooks/useNotice";
 import { useRouter } from "next/navigation";
+import styled from "styled-components";
+import ArrowIcon from "@/assets/icons/vector.svg";
 
 export default function NoticePage() {
   const router = useRouter();
   const { useNoticeList } = useNotice();
   const { data: noticeResponse, isLoading } = useNoticeList();
-
+  const [openId, setOpenId] = useState<number | null>(null); 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   const notices = noticeResponse?.data || [];
   const totalPages = Math.ceil(notices.length / itemsPerPage);
-
   // 현재 페이지에 해당하는 공지사항만 필터링
   const currentNotices = notices.slice(
     (currentPage - 1) * itemsPerPage,
@@ -26,73 +28,176 @@ export default function NoticePage() {
   if (isLoading) {
     return <div>로딩 중...</div>;
   }
+    const toggleOpen = (id: number) => {
+    setOpenId(prev => (prev === id ? null : id));
+  };
 
-  return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+ return (
+    <Wrapper>
       <Header />
+      <Content>
+        <Card>
+          <Title>공지사항</Title>
+          <TableWrapper>
+            <StyledTable>
+              <thead>
+                <tr>
+                  <Th width="80">No</Th>
+                  <Th>제목</Th>
+                  <Th width="140">작성일</Th>
+                  <Th width="5"></Th>
+                </tr>
+              </thead>
+
+              <tbody>
+  {currentNotices.map((notice) => (
+    <React.Fragment key={notice.noticeId}>
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-6 py-8">
-            <h1 className="text-2xl font-bold text-black mb-8">
-              공지사항
-            </h1>
+      <Tr isOpen={openId === notice.noticeId}>
+        <Td>{notice.noticeId}</Td>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-[#BCCCDC]">
-                <thead className="bg-[#F8FAFC]">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider w-20">
-                      No
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                      제목
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider w-32">
-                      작성일
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-[#BCCCDC]">
-                  {currentNotices.map((notice) => (
-                    <tr 
-                      key={notice.noticeId}
-                      className="hover:bg-[#D9EAFD] cursor-pointer transition-colors"
-                      onClick={() => {
-                        router.push(`/notice/${notice.noticeId}`);
-                      }}
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                        {notice.noticeId}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                        <div className="flex items-center gap-2">
-                          {notice.title}
-                          {/* 최근 3일 이내의 공지사항에 NEW 표시 */}
-                          {new Date().getTime() - new Date(notice.createdAt).getTime() < 3 * 24 * 60 * 60 * 1000 && (
-                            <span className="bg-[#D9EAFD] text-black text-xs px-2 py-0.5 rounded">
-                              NEW
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                        {new Date(notice.createdAt).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        <Td>
+          <FlexRow>{notice.title}</FlexRow>
+        </Td>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
+        <Td>{new Date(notice.createdAt).toLocaleDateString()}</Td>
+
+        <ArrowTd>
+          <ArrowBtn
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleOpen(notice.noticeId);
+            }}
+          >
+            <ArrowIcon
+              style={{
+                transform:
+                  openId === notice.noticeId ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "0.2s",
+              }}
             />
-          </div>
-        </div>
-      </main>
-    </div>
+          </ArrowBtn>
+        </ArrowTd>
+      </Tr>
+      {openId === notice.noticeId && (
+        <TrContent>
+          <TdContent colSpan={4}>
+            {notice.content}
+          </TdContent>
+        </TrContent>
+      )}
+    </React.Fragment>
+  ))}
+</tbody>
+            </StyledTable>
+          </TableWrapper>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </Card>
+      </Content>
+    </Wrapper>
   );
-} 
+}
+
+const Wrapper = styled.div`
+  min-height: 100vh;
+  background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
+`;
+
+const Content = styled.main`
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 77px 120px 180px 120px;
+`;
+
+const Card = styled.div`
+
+`;
+
+const Title = styled.h1`
+  color: white;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%;
+  margin-bottom: 43px;
+`;
+
+const TableWrapper = styled.div`
+  overflow-x: auto;
+`;
+
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+  thead{
+    background: rgba(255, 255, 255, 0.1);
+    height: 48px;
+    padding: 30px 20px;
+  }
+`;
+
+const Th = styled.th<{ width?: string }>`
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; 
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  width: ${(props) => props.width || "auto"};
+`;
+
+const Td = styled.td`
+  padding: 30px 20px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%;
+  text-align: center;
+`;
+
+const Tr = styled.tr<{ isOpen: boolean }>`
+  cursor: pointer;
+  text-align: center;
+  border-bottom: ${(p) =>
+    p.isOpen ? "none" : "1px solid var(--white-50, rgba(255, 255, 255, 0.50))"};
+`;
+
+const FlexRow = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+`;
+
+const ArrowBtn = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+`;
+
+const TrContent = styled.tr`
+`;
+
+const TdContent = styled.td`
+  font-size: 16px;
+  font-weight: 400;
+  text-align: left;
+  line-height: 140%;
+  padding-bottom: 30px;
+  text-align: center;
+  width: 484px;
+  border-bottom: 1px solid var(--white-50, rgba(255, 255, 255, 0.50));
+`;
+
+const ArrowTd = styled.td`
+  width: 40px;
+  text-align: center;
+  padding: 0;
+`;
