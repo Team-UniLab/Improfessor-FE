@@ -408,9 +408,12 @@ const BackgroundVideo = styled.video`
   object-fit: cover;
   z-index: 0; /* 가장 뒤 */
 `;
+
 const Content = styled.div`
   position: relative;
-  z-index: 2;`
+  z-index: 2;
+  `;
+
 const BackButton = styled(Link)`
   position: absolute;
   margin-top: 83px;
@@ -421,6 +424,7 @@ const BackButton = styled(Link)`
 const Center = styled.div`
   min-height: 100vh;
   padding-top: 135px;
+  padding-bottom: 135px;
   display:flex;
   justify-content:center;
   //align-items:flex-start;
