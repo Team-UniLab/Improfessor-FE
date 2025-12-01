@@ -65,7 +65,7 @@ export default function Header() {
 
               {isProfileOpen && (
                 <Dropdown>
-                  <DropdownItem disabled>
+                  <DropdownItem>
                     <EmailText>{user?.email}</EmailText>
                     <SmallText>무료 생성: {user?.freeCount}회</SmallText>
                   </DropdownItem>

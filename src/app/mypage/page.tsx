@@ -2,31 +2,34 @@
 
 import Header from "@/components/Header";
 import { useUser } from "@/context/UserContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+//import {useEffect} from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { useAlert } from "@/context/AlertContext";
 import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/auth";
-import UniversitySearchModal from "@/components/UniversitySearchModal";
-import MajorSearchModal from "@/components/MajorSearchModal";
+//import UniversitySearchModal from "@/components/UniversitySearchModal";
+//import MajorSearchModal from "@/components/MajorSearchModal";
 import styled from "styled-components";
 
 export default function MyPage() {
   const router = useRouter();
-  const { user, isLoading, error, isAuthenticated } = useUser();
+  const { user, isLoading, error } = useUser();
+  //const { isAuthenticated } = useUser();
   const { useUpdateUser, useDeleteUser } = useAuth();
   const updateUser = useUpdateUser();
   const deleteUser = useDeleteUser();
   const { showAlert, showConfirm } = useAlert();
 
   // 로컬 상태 (수정 가능한 필드들)
+  const [nickname, setNickname] = useState<string>(user!.nickname ?? "");
   const [university, setUniversity] = useState<string | null>(null);
-  const [universityId, setUniversityId] = useState<string | null>(null);
+  //const [universityId, setUniversityId] = useState<string | null>(null);
   const [major, setMajor] = useState<string | null>(null);
   const [inputReferral, setInputReferral] = useState("");
-  const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
-  const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
+  // const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
+  // const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
 
   // // 인증되지 않은 경우 로그인 페이지로 리다이렉트
   // useEffect(() => {
@@ -64,20 +67,30 @@ export default function MyPage() {
   const hasChanges = () => {
     const universityChanged = university !== null && university !== (user.university || "");
     const majorChanged = major !== null && major !== (user.major || "");
+    const nicknameChanged = nickname !== null && nickname !== (user.nickname || "");
     
-    return universityChanged || majorChanged;
+    return universityChanged || majorChanged || nicknameChanged;
   };
 
   const handleUpdateUser = async () => {
     try {
       const updateData: {
         id: number;
+        nickname: string;
         university?: string | null;
         major?: string | null;
         recommendNickname?: string;
       } = {
-        id: parseInt(user.userId)
+        id: parseInt(user.userId),
+        nickname: nickname ?? ""
       };
+
+      // 닉네임 처리: 수정된 값이 있으면 수정값, 없으면 기존값 유지
+      if (nickname !== null) {
+        updateData.nickname = nickname;
+      } else if (user.nickname) {
+        updateData.nickname = user.nickname;
+      }
       
       // 대학교 처리: 수정된 값이 있으면 수정값, 없으면 기존값 유지
       if (university !== null) {
@@ -130,14 +143,14 @@ export default function MyPage() {
     });
   };
 
-  const handleUniversitySelect = (university: string, universityId: string) => {
-    setUniversity(university);
-    setUniversityId(universityId);
-  };
+  // const handleUniversitySelect = (university: string, universityId: string) => {
+  //   setUniversity(university);
+  //   setUniversityId(universityId);
+  // };
 
-  const handleMajorSelect = (major: string) => {
-    setMajor(major);
-  };
+  // const handleMajorSelect = (major: string) => {
+  //   setMajor(major);
+  // };
 
   const handleReferralSubmit = async () => {
     if (!inputReferral.trim()) {
@@ -191,7 +204,10 @@ return (
 
         <FormGroup>
           <Label>사용자 닉네임</Label>
-          <Input disabled value={user.nickname} />
+          <Input
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+/>
         </FormGroup>
 
         <FormGroup>
@@ -252,7 +268,7 @@ return (
 
         <DangerButton onClick={handleDeleteUser}>계정 탈퇴</DangerButton>
       </Content>
-
+{/* 
       <UniversitySearchModal
         isOpen={isUniversityModalOpen}
         onClose={() => setIsUniversityModalOpen(false)}
@@ -265,14 +281,14 @@ return (
         onSelect={setMajor}
         selectedUniversity={displayUniversity}
         selectedUniversityId={universityId || ""}
-      />
+      /> */}
     </Wrapper>
   );
 }
 const Wrapper = styled.div`
   min-height: 100vh;
   background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
-  padding-top: 24px;
+  padding-top: 24px;n
 `;
 
 const Content = styled.div`
