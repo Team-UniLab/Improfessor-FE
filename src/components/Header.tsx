@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import { useUser } from '@/context/UserContext';
 import styled from "styled-components";
+import BellIcon from "@/assets/icons/bell.svg";
+import UserIcon from "@/assets/icons/user.svg";
 
 export default function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -113,19 +115,19 @@ const InnerContainer = styled.div`
 `;
 
 const Logo = styled(Link)`
-  font-size: 28px;
+  font-size: 26px;
+  font-style: normal;
   font-weight: 700;
+  line-height: 140%
   color: white;
   text-decoration: none;
-
-  /* 글로우 효과 */
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.70);
 `;
 
 const RightBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
 `;
 
 /* 아이콘 버튼 */
@@ -139,18 +141,6 @@ const IconButton = styled(Link)`
   }
 `;
 
-const BellIcon = styled.div`
-  width: 22px;
-  height: 22px;
-  background: url('/icons/bell.svg') center/contain no-repeat;
-`;
-
-const UserIcon = styled.div`
-  width: 22px;
-  height: 22px;
-  background: url('/icons/profile.svg') center/contain no-repeat;
-`;
-
 /* 프로필 */
 const ProfileWrapper = styled.div`
   position: relative;
@@ -159,12 +149,11 @@ const ProfileWrapper = styled.div`
 const ProfileButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   background: none;
   border: none;
   cursor: pointer;
   color: white;
-
   &:hover {
     opacity: 0.7;
   }
@@ -172,6 +161,9 @@ const ProfileButton = styled.button`
 
 const Nickname = styled.span`
   font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
   color: white;
 `;
 
@@ -179,39 +171,39 @@ const Nickname = styled.span`
 const Dropdown = styled.div`
   position: absolute;
   right: 0;
-  margin-top: 10px;
-  width: 180px;
-  padding: 8px 0;
-
-  background: rgba(30, 30, 30, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-top: 30px;
+  width: 190px;
+  padding: 10px 0;
   border-radius: 10px;
-
+  background: var(--bright-navy-4, rgba(50, 116, 239, 0.04));
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 `;
 
 const DropdownItem = styled.div`
-  padding: 10px 14px;
+  padding: 10px 20px;
   font-size: 14px;
   color: #ddd;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 400;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 `;
 
 const EmailText = styled.div`
-  font-size: 12px;
+  font-size: 14px;
 `;
 
 const SmallText = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 2px;
 `;
 
 const DropdownLink = styled(Link)`
-  padding: 10px 14px;
+  padding: 20px;
   display: block;
-  font-size: 14px;
-  color: white;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; 
   text-decoration: none;
 
   &:hover {
@@ -220,13 +212,16 @@ const DropdownLink = styled(Link)`
 `;
 
 const DropdownButton = styled.button`
-  padding: 10px 14px;
+  padding: 20px;
   width: 100%;
   text-align: left;
   background: none;
   border: none;
   color: white;
-  font-size: 14px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; 
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
