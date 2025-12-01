@@ -1,8 +1,8 @@
 'use client';
 
 import Header from "@/components/Header";
-import { useEffect, useState, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import useProblem from "@/hooks/useProblem";
 import { useAlert } from "@/context/AlertContext";
 import { useUser } from "@/context/UserContext";
@@ -202,10 +202,6 @@ const GeneratePage=() => {
 };
 
 export default GeneratePage;
-
-/* ============================
-      styled-components
-============================ */
 
 const Wrapper = styled.div`
   min-height: 100vh;

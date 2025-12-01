@@ -7,9 +7,16 @@ import { useSearchParams } from "next/navigation";
 const SignupCompletePage=() => {
  const params = useSearchParams();
  const name = params.get("name");
- //const name="dlrkgud";
   return (
     <Wrapper>
+       <BackgroundVideo
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </BackgroundVideo>
       <Content>
         <Title>
           안녕하세요, <span>{name}</span> 님
@@ -31,12 +38,28 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), 
-  url("/background.gif") lightgray 50% / cover no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%);
+      z-index: 1; /* 내용 위에 올려 덮는 레이어 */
+    }
 `;
+
+  const BackgroundVideo = styled.video`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0; /* 가장 뒤 */
+  `;
+
 
 const Content = styled.div`
   position: relative;
