@@ -89,11 +89,11 @@ useEffect(() => {
 
           {/* ID */}
           <FieldRow>
-            <Label>ID</Label>
+            <Label>Login</Label>
             <InputBox
               id="email"
               value={formData.email}
-              placeholder="아이디를 입력하세요"
+              placeholder="이메일을 입력하세요"
               onChange={handleChange}
             />
           </FieldRow>

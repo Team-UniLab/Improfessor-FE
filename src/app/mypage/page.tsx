@@ -2,78 +2,63 @@
 
 import Header from "@/components/Header";
 import { useUser } from "@/context/UserContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+//import {useEffect} from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { useAlert } from "@/context/AlertContext";
 import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/auth";
-import UniversitySearchModal from "@/components/UniversitySearchModal";
-import MajorSearchModal from "@/components/MajorSearchModal";
+//import UniversitySearchModal from "@/components/UniversitySearchModal";
+//import MajorSearchModal from "@/components/MajorSearchModal";
+import styled from "styled-components";
 
 export default function MyPage() {
   const router = useRouter();
-  const { user, isLoading, error, isAuthenticated } = useUser();
+  const { user, isLoading, error } = useUser();
+  //const { isAuthenticated } = useUser();
   const { useUpdateUser, useDeleteUser } = useAuth();
   const updateUser = useUpdateUser();
   const deleteUser = useDeleteUser();
   const { showAlert, showConfirm } = useAlert();
 
   // 로컬 상태 (수정 가능한 필드들)
+  const [nickname, setNickname] = useState<string>(user!.nickname ?? "");
   const [university, setUniversity] = useState<string | null>(null);
-  const [universityId, setUniversityId] = useState<string | null>(null);
+  //const [universityId, setUniversityId] = useState<string | null>(null);
   const [major, setMajor] = useState<string | null>(null);
   const [inputReferral, setInputReferral] = useState("");
-  const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
-  const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
+  // const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
+  // const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
 
-  // 인증되지 않은 경우 로그인 페이지로 리다이렉트
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, router]);
+  // // 인증되지 않은 경우 로그인 페이지로 리다이렉트
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     router.push('/login');
+  //   }
+  // }, [isAuthenticated, router]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
 
-  // 로딩 중일 때
-  if (isLoading) {
+   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC]">
+      <Wrapper>
         <Header />
-        <main className="max-w-xl mx-auto px-4 sm:px-6 lg:px-0 py-12">
-          <div className="text-center">로딩 중...</div>
-        </main>
-      </div>
+        <Center>로딩 중...</Center>
+      </Wrapper>
     );
   }
 
-  // 에러가 있을 때
-  if (error) {
+  if (error || !user) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC]">
+      <Wrapper>
         <Header />
-        <main className="max-w-xl mx-auto px-4 sm:px-6 lg:px-0 py-12">
-          <div className="text-center text-red-600">사용자 정보를 불러오는데 실패했습니다.</div>
-        </main>
-      </div>
+        <Center>사용자 정보를 불러오는데 실패했습니다.</Center>
+      </Wrapper>
     );
   }
-
-  // 사용자 정보가 없을 때
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC]">
-        <Header />
-        <main className="max-w-xl mx-auto px-4 sm:px-6 lg:px-0 py-12">
-          <div className="text-center">사용자 정보를 찾을 수 없습니다.</div>
-        </main>
-      </div>
-    );
-  }
-
   // 사용자 정보가 로드되면 로컬 상태 업데이트 (초기화 시에만)
   const displayUniversity = university !== null ? university : (user.university || "");
   const displayMajor = major !== null ? major : (user.major || "");
@@ -82,20 +67,30 @@ export default function MyPage() {
   const hasChanges = () => {
     const universityChanged = university !== null && university !== (user.university || "");
     const majorChanged = major !== null && major !== (user.major || "");
+    const nicknameChanged = nickname !== null && nickname !== (user.nickname || "");
     
-    return universityChanged || majorChanged;
+    return universityChanged || majorChanged || nicknameChanged;
   };
 
   const handleUpdateUser = async () => {
     try {
       const updateData: {
         id: number;
+        nickname: string;
         university?: string | null;
         major?: string | null;
         recommendNickname?: string;
       } = {
-        id: parseInt(user.userId)
+        id: parseInt(user.userId),
+        nickname: nickname ?? ""
       };
+
+      // 닉네임 처리: 수정된 값이 있으면 수정값, 없으면 기존값 유지
+      if (nickname !== null) {
+        updateData.nickname = nickname;
+      } else if (user.nickname) {
+        updateData.nickname = user.nickname;
+      }
       
       // 대학교 처리: 수정된 값이 있으면 수정값, 없으면 기존값 유지
       if (university !== null) {
@@ -148,14 +143,14 @@ export default function MyPage() {
     });
   };
 
-  const handleUniversitySelect = (university: string, universityId: string) => {
-    setUniversity(university);
-    setUniversityId(universityId);
-  };
+  // const handleUniversitySelect = (university: string, universityId: string) => {
+  //   setUniversity(university);
+  //   setUniversityId(universityId);
+  // };
 
-  const handleMajorSelect = (major: string) => {
-    setMajor(major);
-  };
+  // const handleMajorSelect = (major: string) => {
+  //   setMajor(major);
+  // };
 
   const handleReferralSubmit = async () => {
     if (!inputReferral.trim()) {
@@ -195,139 +190,291 @@ export default function MyPage() {
       }
     }
   };
-
-  return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+return (
+    <Wrapper>
       <Header />
+      <Content>
+        <Title>마이페이지</Title>
+        <SectionTitle>내 계정</SectionTitle>
 
-      <main className="max-w-xl mx-auto px-4 sm:px-6 lg:px-0 py-12">
-        {/* 내 계정 */}
-        <h1 className="text-3xl font-bold text-black mb-8">내 계정</h1>
+        <FormGroup>
+          <Label>사용자 이메일</Label>
+          <Input disabled value={user.email} />
+        </FormGroup>
 
-        {/* 사용자 이메일 */}
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-black mb-2">사용자 이메일</label>
-            <input
-              type="email"
-              value={user.email}
-              disabled
-              className="w-full px-4 py-2 bg-[#F8FAFC] text-black rounded focus:outline-none cursor-not-allowed border border-[#BCCCDC]"
-            />
-          </div>
+        <FormGroup>
+          <Label>사용자 닉네임</Label>
+          <Input
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+/>
+        </FormGroup>
 
-          {/* 닉네임 */}
-          <div>
-            <label className="block text-sm font-medium text-black mb-2">사용자 닉네임</label>
-            <input
-              type="text"
-              value={user.nickname}
-              disabled
-              className="w-full px-4 py-2 bg-[#F8FAFC] text-black rounded focus:outline-none cursor-not-allowed border border-[#BCCCDC]"
-            />
-          </div>
+        <FormGroup>
+          <Label>대학교</Label>
+          <Input
+            value={displayUniversity}
+            onChange={(e) => setUniversity(e.target.value)}
+          />
+        </FormGroup>
 
-          {/* 대학교 + 학과 */}
-          <div className="space-y-4">
-            {/* 대학교 */}
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">대학교</label>
-              <input
-                type="text"
-                value={displayUniversity}
-                onChange={(e) => setUniversity(e.target.value)}
-                placeholder="대학교를 입력해주세요"
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-              />
-            </div>
+        <FormGroup>
+          <Label>학과</Label>
+          <Input
+            value={displayMajor}
+            onChange={(e) => setMajor(e.target.value)}
+          />
+        </FormGroup>
 
-            {/* 학과 */}
-            <div>
-              <label className="block text-sm font-medium text-black mb-2">학과</label>
-              <input
-                type="text"
-                value={displayMajor}
-                onChange={(e) => setMajor(e.target.value)}
-                placeholder="학과를 입력해주세요"
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded-lg focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black placeholder-black/50"
-              />
-            </div>
-          </div>
-
-          {/* 수정하기 버튼 */}
-          <button
-            type="button"
-            onClick={handleUpdateUser}
-            disabled={updateUser.isPending || !hasChanges()}
-            className="w-full bg-[#D9EAFD] text-black py-3 rounded hover:bg-[#BCCCDC] transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {updateUser.isPending ? "수정 중..." : "수정하기"}
-          </button>
-        </div>
-
-        {/* 프로모션 */}
-        <div className="mt-12 pt-8 border-t border-[#BCCCDC] space-y-6">
-          <h2 className="text-xl font-semibold text-black">프로모션</h2>
-          <p className="text-black">
-            친구를 추천하여 최대 99회의 무료 생성 횟수를 받으세요!<br />
-            친구가 내 추천인 코드를 입력하면 친구는 3회, 나는 3회의 무료 생성 횟수를 받습니다.<br />
-            추천인 코드 입력은 1회만 가능하고, 추천받는 것은 최대 33회까지 가능합니다.
-          </p>
-
-          {/* 내 추천인 코드 */}
-          <div className="bg-[#F8FAFC] p-4 rounded border border-[#BCCCDC]">
-            <span className="text-black">내 추천인 코드 :</span>
-            <span className="ml-2 font-mono font-bold text-lg text-black">{user.nickname}</span>
-          </div>
-
-          {/* 추천인 코드 입력 */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-black">추천인 코드 입력</label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={inputReferral}
-                onChange={(e) => setInputReferral(e.target.value)}
-                placeholder="추천인 코드"
-                className="w-full px-4 py-2 bg-white border border-[#BCCCDC] rounded focus:ring-2 focus:ring-[#D9EAFD] focus:border-transparent text-black"
-              />
-              <button
-                type="button"
-                onClick={handleReferralSubmit}
-                disabled={updateUser.isPending || !inputReferral.trim()}
-                className="px-4 py-2 bg-[#D9EAFD] text-black rounded hover:bg-[#BCCCDC] transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {updateUser.isPending ? "처리 중..." : "입력"}
-              </button>
-            </div>
-            <p className="text-xs text-black">문제 생성 횟수가 1회 추가됩니다. (1회만 가능)</p>
-          </div>
-        </div>
-
-        {/* 계정 탈퇴 */}
-        <button
-          type="button"
-          onClick={handleDeleteUser}
-          disabled={deleteUser.isPending}
-          className="w-full bg-[#BCCCDC] text-black py-3 rounded mt-12 hover:bg-[#D9EAFD] transition disabled:opacity-50 disabled:cursor-not-allowed"
+        <PrimaryButton
+          disabled={updateUser.isPending || !hasChanges()}
+          onClick={handleUpdateUser}
         >
-          {deleteUser.isPending ? "처리 중..." : "계정탈퇴"}
-        </button>
-      </main>
+          {updateUser.isPending ? "수정 중..." : "수정하기"}
+        </PrimaryButton>
+        <SectionLine />
 
+        <PromoTitle>프로모션</PromoTitle>
+
+        <PromoText>
+          친구를 추천하여 최대 99회의 무료 생성 횟수를 받으세요!<br />
+          친구가 내 추천인 코드를 입력하면 친구는 3회, 나는 3회의 무료 생성 횟수를 받습니다.<br />
+          추천인 코드 입력은 1회만 가능하고, 추천받는 것은 최대 33회까지 가능합니다.
+        </PromoText>
+        <Row>
+        <PromoBox>
+          <PromoLabel>내 추천인 코드 :</PromoLabel>
+          <PromoCode>{user.nickname}</PromoCode>
+        </PromoBox>
+
+        <Column>
+          <PromoLabel2>추천인 코드 입력</PromoLabel2>
+            <Group>
+            <Input
+              value={inputReferral}
+              onChange={(e) => setInputReferral(e.target.value)}
+              placeholder="추천인 코드를 입력하세요"
+            />
+            <SmallButton
+              disabled={!inputReferral.trim()}
+              onClick={handleReferralSubmit}
+            >
+              입력
+            </SmallButton>
+          </Group>
+          <SmallText>문제 생성 횟수가 1회 추가됩니다. (1회만 가능)</SmallText>
+        </Column>
+        </Row>
+
+        <DangerButton onClick={handleDeleteUser}>계정 탈퇴</DangerButton>
+      </Content>
+{/* 
       <UniversitySearchModal
         isOpen={isUniversityModalOpen}
         onClose={() => setIsUniversityModalOpen(false)}
-        onSelect={handleUniversitySelect}
+        onSelect={setUniversity}
       />
-      
+
       <MajorSearchModal
         isOpen={isMajorModalOpen}
         onClose={() => setIsMajorModalOpen(false)}
-        onSelect={handleMajorSelect}
+        onSelect={setMajor}
         selectedUniversity={displayUniversity}
         selectedUniversityId={universityId || ""}
-      />
-    </div>
+      /> */}
+    </Wrapper>
   );
-} 
+}
+const Wrapper = styled.div`
+  min-height: 100vh;
+  background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
+  padding-top: 24px;n
+`;
+
+const Content = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 77px 120px 180px 120px;
+  color: white;
+`;
+
+const Center = styled.div`
+  text-align: center;
+  margin-top: 180px;
+  color: white;
+`;
+
+const Title = styled.h1`
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%;
+  margin-bottom: 77px;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%;
+  margin-bottom: 50px;
+`;
+
+const SectionLine = styled.div`
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.5);
+  margin-top: 97px;
+  margin-bottom: 85px;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 49px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-left: 40px;
+`;
+
+const Label = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  width: 98px;
+`;
+
+const Input = styled.input`
+  width: 328px;
+  height: 41px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  background: var(--white-30, rgba(255, 255, 255, 0.30));
+  &:disabled {
+    cursor: not-allowed;
+  }
+  margin-right: 25px;
+`;
+
+const PrimaryButton = styled.button`
+  width: 328px;
+  height: 41px;
+  padding: 0 24.957px;
+  border-radius: 10px;
+  background: var(--dusty-blue-80, rgba(72, 86, 105, 0.80));
+  box-shadow: 0 0 4px 0 rgba(255, 255, 255, 0.50);
+  font-family: "Apple SD Gothic Neo";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  margin-left: 158px;
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+const PromoTitle = styled.h2`
+font-size: 30px;
+font-style: normal;
+font-weight: 600;
+line-height: 140%;
+margin-bottom: 17px;
+`;
+
+
+const PromoText = styled.p`
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-bottom: 70px;
+`;
+
+const PromoBox = styled.div`
+  border-radius: 10px;
+  border: 1px solid var(--white-100, #FFF);
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: center;
+  height: 81px;
+  justify-content: center;
+  margin-left: 20px;
+`;
+
+const PromoLabel = styled.span`
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+`;
+
+const PromoLabel2 = styled.span`
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-bottom: 20px;
+`;
+const PromoCode = styled.span`
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; 
+  color: white;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 100px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  `;
+
+const Group = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  `;
+
+const SmallButton = styled.button`
+  height: 41px;
+  padding: 0 24px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.30);
+  color: white;
+  cursor: pointer;
+  margin-left: 17px;
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+const SmallText = styled.div`;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  text-align: right;
+  margin-right: 118px;
+`;
+
+const DangerButton = styled.button`
+  width: 328px;
+  height: 41px;
+  padding: 0 24.957px;
+  border-radius: 10px;
+  background: var(--black-100, linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #000);
+  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.70);
+  margin: 140px auto 0 auto;  
+  display: block;
+`;

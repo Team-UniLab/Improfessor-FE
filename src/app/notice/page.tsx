@@ -50,11 +50,11 @@ export default function NoticePage() {
               </thead>
 
               <tbody>
-  {currentNotices.map((notice) => (
-    <React.Fragment key={notice.noticeId}>
+          {currentNotices.map((notice, index) => (
+        <React.Fragment key={notice.noticeId}>
       
       <Tr isOpen={openId === notice.noticeId}>
-        <Td>{notice.noticeId}</Td>
+        <Td>{(currentPage - 1) * itemsPerPage + (index + 1)}</Td>
 
         <Td>
           <FlexRow>{notice.title}</FlexRow>
@@ -106,6 +106,7 @@ export default function NoticePage() {
 const Wrapper = styled.div`
   min-height: 100vh;
   background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
+  padding-top: 24px;
 `;
 
 const Content = styled.main`
@@ -162,7 +163,6 @@ const Td = styled.td`
 `;
 
 const Tr = styled.tr<{ isOpen: boolean }>`
-  cursor: pointer;
   text-align: center;
   border-bottom: ${(p) =>
     p.isOpen ? "none" : "1px solid var(--white-50, rgba(255, 255, 255, 0.50))"};

@@ -207,6 +207,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
   background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
   color: white;
+  padding-top: 24px;
 `;
 
 const ContentWrapper = styled.div`
