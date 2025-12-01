@@ -9,6 +9,15 @@ import styled from "styled-components";
 
   return (
     <Wrapper>
+       <BackgroundVideo
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </BackgroundVideo>
+      <Content>
       <Card>
         <Title>내가 교수님</Title>
 
@@ -28,6 +37,7 @@ import styled from "styled-components";
           </>
         )}
       </Card>
+      </Content>
     </Wrapper>
   );
 }
@@ -41,10 +51,28 @@ const Wrapper = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%),
-    url("/background.gif") center/cover no-repeat;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.70) 100%);
+    z-index: 1; /* 내용 위에 올려 덮는 레이어 */
+  }
 `;
+
+const BackgroundVideo = styled.video`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* 가장 뒤 */
+`;
+const Content = styled.div`
+  position: relative;
+  z-index: 2;
+  `;
 
 const Card = styled.div`
   border-radius: 20px;
@@ -52,6 +80,7 @@ const Card = styled.div`
   text-align: center;
   width: 769px;
   height: 453px;
+  padding-top: 44px;
 `;
 
 const Title = styled.div`
@@ -62,7 +91,6 @@ const Title = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-top: 44px;
 `;
 
 const Subtitle = styled.div`

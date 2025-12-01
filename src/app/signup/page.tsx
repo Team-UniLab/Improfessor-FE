@@ -200,6 +200,15 @@ import BackIcon from "@/assets/buttons/back.svg";
 
 return(
 <Wrapper>
+ <BackgroundVideo
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </BackgroundVideo>
+      <Content>
       <BackButton href="/">
         <BackIcon width={40} height={40} />
       </BackButton>
@@ -370,6 +379,7 @@ return(
         selectedUniversity={formData.university}
         selectedUniversityId={formData.universityId}
       />
+      </Content>
     </Wrapper>
 )
 }
@@ -379,10 +389,28 @@ export default SignupPage;
 const Wrapper = styled.div`
   min-height: 100vh;
   position: relative;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.70) 0%, rgba(0, 0, 0, 0.70) 100%), 
-  url("/background.gif") lightgray 50% / cover no-repeat;
+  overflow: hidden; /* 영상 튀어나가는 걸 방지 */
+  
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1; /* 내용 위에 올려 덮는 레이어 */
+  }
 `;
-
+const BackgroundVideo = styled.video`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* 가장 뒤 */
+`;
+const Content = styled.div`
+  position: relative;
+  z-index: 2;`
 const BackButton = styled(Link)`
   position: absolute;
   margin-top: 83px;
