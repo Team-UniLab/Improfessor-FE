@@ -5,12 +5,12 @@ import React from "react";
 import Header from "@/components/Header";
 import Pagination from "@/components/Pagination";
 import useNotice from "@/hooks/useNotice";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import ArrowIcon from "@/assets/icons/vector.svg";
 
 export default function NoticePage() {
-  const router = useRouter();
+  //const router = useRouter();
   const { useNoticeList } = useNotice();
   const { data: noticeResponse, isLoading } = useNoticeList();
   const [openId, setOpenId] = useState<number | null>(null); 
