@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import { useUser } from '@/context/UserContext';
+import styled from "styled-components";
 
 export default function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -40,117 +41,214 @@ export default function Header() {
       router.push('/');
     }
   };
-
   return (
-    <header className="bg-white shadow relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link href="/generate" className="text-2xl font-bold text-black">
-            내가 교수님
-            </Link>
-          </div>
+    <Wrapper>
+      <InnerContainer>
+        {/* 로고 */}
+        <Logo href="/generate">내가 교수님</Logo>
 
-          <div className="flex items-center space-x-4">
-            {/* 공지사항 버튼 */}
-            <Link
-              href="/notice"
-              className="text-black hover:text-[#BCCCDC] transition-colors"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-            </Link>
+        <RightBox>
+          {/* 공지사항 아이콘 */}
+          <IconButton href="/notice">
+            <BellIcon />
+          </IconButton>
 
-            {/* 로그인 상태에 따른 UI */}
-            {isAuthenticated ? (
-              /* 프로필 드롭다운 */
-              <div className="relative">
-                <button
-                  className="flex items-center text-black hover:text-[#BCCCDC] transition-colors"
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                >
-                  <div className="flex items-center space-x-2">
-                    {user ? (
-                      <span className="text-sm font-medium">{user.nickname}</span>
-                    ) : userLoading ? (
-                      <span className="text-sm text-gray-500">로딩 중...</span>
-                    ) : (
-                      <span className="text-sm font-medium">사용자</span>
-                    )}
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </div>
-                </button>
+          {/* 프로필 */}
+          {isAuthenticated ? (
+            <ProfileWrapper>
+              <ProfileButton onClick={() => setIsProfileOpen(!isProfileOpen)}>
+                <Nickname>{user?.nickname ?? '사용자'}</Nickname>
+                <UserIcon />
+              </ProfileButton>
 
-                {/* 드롭다운 메뉴 */}
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-[#BCCCDC]">
-                    {user && (
-                      <div className="px-4 py-2 text-xs text-gray-500 border-b border-[#BCCCDC]">
-                        <div className="font-medium">{user.email}</div>
-                        <div>무료 생성: {user.freeCount}회</div>
-                      </div>
-                    )}
-                    <Link
-                      href="/mypage"
-                      className="block px-4 py-2 text-sm text-black hover:bg-[#D9EAFD]"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      마이페이지
-                    </Link>
-                    <button
-                      className="block w-full text-left px-4 py-2 text-sm text-black hover:bg-[#D9EAFD] disabled:opacity-50"
-                      onClick={handleLogout}
-                      disabled={logoutMutation.isPending}
-                    >
-                      {logoutMutation.isPending ? '로그아웃 중...' : '로그아웃'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              /* 로그인/회원가입 버튼 */
-              <div className="flex items-center space-x-2">
-                <Link
-                  href="/login"
-                  className="text-black hover:text-[#BCCCDC] transition-colors"
-                >
-                  로그인
-                </Link>
-                <span className="text-gray-400">|</span>
-                <Link
-                  href="/signup"
-                  className="text-black hover:text-[#BCCCDC] transition-colors"
-                >
-                  회원가입
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
+              {isProfileOpen && (
+                <Dropdown>
+                  <DropdownItem disabled>
+                    <EmailText>{user?.email}</EmailText>
+                    <SmallText>무료 생성: {user?.freeCount}회</SmallText>
+                  </DropdownItem>
+
+                  <DropdownLink href="/mypage" onClick={() => setIsProfileOpen(false)}>
+                    마이페이지
+                  </DropdownLink>
+
+                  <DropdownButton onClick={handleLogout}>
+                    {logoutMutation.isPending ? '로그아웃 중...' : '로그아웃'}
+                  </DropdownButton>
+                </Dropdown>
+              )}
+            </ProfileWrapper>
+          ) : (
+            <LoginGroup>
+              <LoginLink href="/login">로그인</LoginLink>
+              <Divider>|</Divider>
+              <LoginLink href="/signup">회원가입</LoginLink>
+            </LoginGroup>
+          )}
+        </RightBox>
+      </InnerContainer>
+    </Wrapper>
   );
-} 
+}
+const Wrapper = styled.header`
+  width: 80vw;
+  max-width: 1200px;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  border-radius: 99px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.40);
+  background: var(--bright-navy-4, rgba(50, 116, 239, 0.04));
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+`;
+
+const InnerContainer = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Logo = styled(Link)`
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+
+  /* 글로우 효과 */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+`;
+
+const RightBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
+/* 아이콘 버튼 */
+const IconButton = styled(Link)`
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+const BellIcon = styled.div`
+  width: 22px;
+  height: 22px;
+  background: url('/icons/bell.svg') center/contain no-repeat;
+`;
+
+const UserIcon = styled.div`
+  width: 22px;
+  height: 22px;
+  background: url('/icons/profile.svg') center/contain no-repeat;
+`;
+
+/* 프로필 */
+const ProfileWrapper = styled.div`
+  position: relative;
+`;
+
+const ProfileButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+const Nickname = styled.span`
+  font-size: 16px;
+  color: white;
+`;
+
+/* 드롭다운 */
+const Dropdown = styled.div`
+  position: absolute;
+  right: 0;
+  margin-top: 10px;
+  width: 180px;
+  padding: 8px 0;
+
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+`;
+
+const DropdownItem = styled.div`
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+`;
+
+const EmailText = styled.div`
+  font-size: 12px;
+`;
+
+const SmallText = styled.div`
+  font-size: 12px;
+  margin-top: 2px;
+`;
+
+const DropdownLink = styled(Link)`
+  padding: 10px 14px;
+  display: block;
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+`;
+
+const DropdownButton = styled.button`
+  padding: 10px 14px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 14px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+`;
+
+const LoginGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const LoginLink = styled(Link)`
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+const Divider = styled.span`
+  color: rgba(255, 255, 255, 0.3);
+`;
