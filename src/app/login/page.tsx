@@ -19,16 +19,21 @@ const LoginPage=() => {
   const [kakaoUrl, setKakaoUrl] = useState<string>("https://api.improfessor.o-r.kr/oauth2/authorization/kakao");
 
   // 로컬 개발환경에서 리다이렉트 URI를 localhost로 설정
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (isLocal) {
-        const url = new URL('https://api.improfessor.o-r.kr/oauth2/authorization/kakao');
-        url.searchParams.set('redirect_uri', 'http://localhost:5173/generate');
-        setKakaoUrl(url.toString());
-      }
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const url = new URL("https://api.improfessor.o-r.kr/oauth2/authorization/kakao");
+
+    if (isLocal) {
+      url.searchParams.set("redirect_uri", "http://localhost:5173/kakao/callback");
+    } else {
+      url.searchParams.set("redirect_uri", "https://improfessor-fe-eta.vercel.app/kakao/callback");
     }
-  }, []);
+
+    setKakaoUrl(url.toString());
+  }
+}, []);
+
 
   const [formData, setFormData] = useState({
     email: "",
@@ -65,6 +70,15 @@ const LoginPage=() => {
 
   return (
     <Wrapper>
+       <BackgroundVideo
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </BackgroundVideo>
+      <Content>
       <BackButton href="/">
       <Back width={40} height={40} />
         </BackButton>
@@ -111,6 +125,7 @@ const LoginPage=() => {
           </SignupText>
         </Panel>
       </CenterContainer>
+      </Content>
     </Wrapper>
   );
 }
@@ -118,11 +133,29 @@ export default LoginPage;
 
 const Wrapper = styled.div`
   min-height: 100vh;
-  background:
-    linear-gradient(0deg, rgba(0, 0, 0, 0.70) 0%, rgba(0,0,0,0.7) 100%),
-    url("/background.gif") center/cover no-repeat;
   position: relative;
-`;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1; /* 내용 위에 올려 덮는 레이어 */
+    }
+  `;
+  const BackgroundVideo = styled.video`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0; /* 가장 뒤 */
+  `;
+
+const Content = styled.div`
+  position: relative;
+  z-index: 2;
+  `;
 
 const BackButton = styled(Link)`
   position: absolute;
@@ -130,8 +163,6 @@ const BackButton = styled(Link)`
   margin-left: 120px;
   z-index: 10;
   color: white;
-
-
   &:hover {
     opacity: 1;
   }
