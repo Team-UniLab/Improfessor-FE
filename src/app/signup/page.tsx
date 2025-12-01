@@ -90,20 +90,20 @@ import BackIcon from "@/assets/buttons/back.svg";
     }
   };
 
-  const handleUniversitySelect = (university: string, universityId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      university,
-      universityId
-    }));
-  };
+  // const handleUniversitySelect = (university: string, universityId: string) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     university,
+  //     universityId
+  //   }));
+  // };
 
-  const handleMajorSelect = (major: string) => {
-    setFormData(prev => ({
-      ...prev,
-      major
-    }));
-  };
+  // const handleMajorSelect = (major: string) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     major
+  //   }));
+  // };
 
   const handleSendVerification = async () => {
     if (!formData.email) {
