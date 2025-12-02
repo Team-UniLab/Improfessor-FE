@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Header from "@/components/Header";
 import { Problem } from '@/types/problem';
 import useProblem from '@/hooks/useProblem';
@@ -9,7 +9,6 @@ import styled from 'styled-components';
 
 const ResultPage =()=> {
   const router = useRouter();
-  //const searchParams = useSearchParams();
   const { downloadProblemPDF } = useProblem();
   
   const [isLoading, setIsLoading] = useState(false);
