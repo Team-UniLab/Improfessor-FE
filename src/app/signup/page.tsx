@@ -7,8 +7,8 @@ import useAuth from "@/hooks/useAuth";
 import { useAlert } from "@/context/AlertContext";
 import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/auth";
-import UniversitySearchModal from "@/components/UniversitySearchModal";
-import MajorSearchModal from "@/components/MajorSearchModal";
+//import UniversitySearchModal from "@/components/UniversitySearchModal";
+//import MajorSearchModal from "@/components/MajorSearchModal";
 import styled from "styled-components";
 import BackIcon from "@/assets/buttons/back.svg";
 
@@ -42,8 +42,8 @@ import BackIcon from "@/assets/buttons/back.svg";
     hasNumber: false,
     hasSpecialChar: false,
   });
-  const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
-  const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
+ // const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
+ // const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
 
   // 비밀번호 정규식 검증 함수
   const validatePassword = (password: string) => {
@@ -315,7 +315,7 @@ return(
               />
               <Button type="button">
               {/* // onClick={() => setIsUniversityModalOpen(true)} */}
-                  검색
+                  저장
                 </Button>
                 </Row>
             </Field>
@@ -332,14 +332,14 @@ return(
               />
               <Button type="button">
               {/* onClick={() => setIsMajorModalOpen(true)}> */}
-                  검색
+                저장
                 </Button>
                 </Row>
             </Field>
 
             {/* 추천코드 */}
             <Field>
-              <Label>추천인 코드 (선택)</Label>
+              <Label1>추천인 코드 (선택)</Label1>
               <Column>
               <Input
                 id="referralCode"
@@ -364,7 +364,7 @@ return(
       </Center>
 
       {/* 모달들 */}
-      <UniversitySearchModal
+      {/* <UniversitySearchModal
         isOpen={isUniversityModalOpen}
         onClose={() => setIsUniversityModalOpen(false)}
         onSelect={(u, id) => {
@@ -378,7 +378,7 @@ return(
         onSelect={(major) => setFormData((f) => ({ ...f, major }))}
         selectedUniversity={formData.university}
         selectedUniversityId={formData.universityId}
-      />
+      /> */}
       </Content>
     </Wrapper>
 )
