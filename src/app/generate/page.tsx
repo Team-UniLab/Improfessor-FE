@@ -206,7 +206,14 @@ const handleGenerate = async () => {
           </UploadBox>
         </Card>
         <GenerateButton onClick={handleGenerate} disabled={isLoading}>
-          {isLoading ? `진행중... (${progress}%)` : "문제 생성하기"}
+           {isLoading ? (
+          <span style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <Spinner />
+            문제 생성 중... ({progress}%)
+          </span>
+        ) : (
+        "문제 생성하기"
+       )}
         </GenerateButton>
       </ContentWrapper>
     </Wrapper>
@@ -341,7 +348,25 @@ const GenerateButton = styled.button`
   border-radius: 20px;
   background: var(--dusty-blue-80, rgba(72, 86, 105, 0.80));
   box-shadow: 0 0 20px 0 #20212B;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   &:disabled {
     cursor: not-allowed;
+  }
+`;
+
+const Spinner = styled.div`
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(255, 255, 255, 0.3); 
+  border-top-color: white; 
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 `;
