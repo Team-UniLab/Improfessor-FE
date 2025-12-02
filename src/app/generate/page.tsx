@@ -1,7 +1,7 @@
 'use client';
 
 import Header from "@/components/Header";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {useProblem} from "@/hooks/useProblem";
 import { useAlert } from "@/context/AlertContext";
@@ -82,7 +82,7 @@ const handleGenerate = async () => {
   const maxSize = 15 * 1024 * 1024;
 
   // 필수 파일 크기 체크
-  for (let f of conceptFiles) {
+  for (const f of conceptFiles) {
     if (f.size > maxSize) {
       showAlert(`${f.name} 파일이 15MB를 초과합니다.`);
       return;
@@ -92,7 +92,7 @@ const handleGenerate = async () => {
   // 선택 파일 크기 체크
   const formatFiles = formatFileRef.current?.files;
   if (formatFiles) {
-    for (let f of formatFiles) {
+    for (const f of formatFiles) {
       if (f.size > maxSize) {
         showAlert(`${f.name} 파일이 15MB를 초과합니다.`);
         return;
@@ -114,7 +114,7 @@ const handleGenerate = async () => {
       },
 
       onComplete: (finalData) => {
-        console.log("🔥 완료된 데이터:", finalData);
+        console.log("완료된 데이터:", finalData);
 
         localStorage.setItem("generateResult", JSON.stringify(finalData));
         router.push("/result");
@@ -127,7 +127,12 @@ const handleGenerate = async () => {
       },
     });
   }
-  
+
+  useEffect(() => {
+  if (!progressStage) return;
+  console.log("최신 progressStage:", progressStage);
+}, [progressStage]);
+
 
   
 
@@ -184,10 +189,7 @@ const handleGenerate = async () => {
             />
 
             <UploadLabel onClick={handleFormatFileClick}>
-              <UploadIcon>
-                <path d="M24 32V16M16 24L24 16L32 24" stroke="#777" strokeWidth="2" />
-                <path d="M8 32H40" stroke="#777" strokeWidth="2" />
-              </UploadIcon>
+              <UploadIcon />
               <UploadText>{formatFileName || "파일 선택하기 (선택)"}</UploadText>
               <UploadSub>
                 <UploadGroup>

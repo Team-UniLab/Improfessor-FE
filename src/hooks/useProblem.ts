@@ -1,25 +1,15 @@
-import { useQueryClient } from '@tanstack/react-query';
+//import { useQueryClient } from '@tanstack/react-query';
 //import { axiosInstance } from '@/lib/axios';
-import {  Problem } from '@/types/problem';
+import {  Problem , ProgressEvent, CompleteEvent, UseProblemReturn} from '@/types/problem';
 import { useUser } from '@/context/UserContext';
 //import { ApiResponse, UserInfo } from '@/types/auth';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-type UseProblemReturn = {
-  generateProblemWithProgress: (args: {
-    conceptFiles: File[];
-    formatFiles?: File[];
-    onProgress: (data: { stage: string; progress: number; message: string }) => void;
-    onComplete: (data: any) => void;
-    onError?: (err: any) => void;
-  }) => Promise<void>;
-};
-
 
 export const useProblem = () : UseProblemReturn => {
   const { user } = useUser();
-  const queryClient = useQueryClient();
-     const generateProblemWithProgress = async ({
+  //const queryClient = useQueryClient();
+    const generateProblemWithProgress = async ({
     conceptFiles,
     formatFiles,
     onProgress,
@@ -28,9 +18,9 @@ export const useProblem = () : UseProblemReturn => {
   }: {
     conceptFiles: File[];
     formatFiles?: File[];
-    onProgress: (data: { stage: string; progress: number; message: string }) => void;
-    onComplete: (data: any) => void;
-    onError?: (err: any) => void;
+    onProgress: (data: ProgressEvent) => void;
+    onComplete:  (data: CompleteEvent) => void;
+    onError?: (err: unknown) => void;
   }) => {
     if (!user?.userId) return;
 
@@ -72,7 +62,7 @@ export const useProblem = () : UseProblemReturn => {
   const lines = event.trim().split("\n");
 
   let eventName = "";
-  let dataJson: any = null;
+  let dataJson: unknown = null;
 
   for (const line of lines) {
     if (line.startsWith("event")) {
@@ -85,7 +75,7 @@ export const useProblem = () : UseProblemReturn => {
       const jsonStr = line.replace("data:", "").trim();
       try {
         dataJson = JSON.parse(jsonStr);
-      } catch (e) {
+      } catch {
         console.warn("JSON 파싱 실패:", line);
       }
     }
@@ -94,11 +84,11 @@ export const useProblem = () : UseProblemReturn => {
   if (!eventName || !dataJson) continue;
 
   if (eventName === "progress") {
-    onProgress(dataJson);
+    onProgress(dataJson as ProgressEvent);
   }
 
   if (eventName === "complete") {
-    onComplete(dataJson);
+    onComplete(dataJson as CompleteEvent);
   }
 }
 
@@ -107,10 +97,6 @@ export const useProblem = () : UseProblemReturn => {
       console.error("SSE 처리 실패:", err);
       onError?.(err);
     }
-  };
-
-  return {
-    generateProblemWithProgress,
   };
 
   // 기존 서버 PDF 다운로드 (임시 주석 처리)
@@ -237,7 +223,7 @@ export const useProblem = () : UseProblemReturn => {
   };
 
   return {
-    useGenerateProblem,
+    generateProblemWithProgress,
     downloadProblemPDF,
   };
 };
