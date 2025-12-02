@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 
 export const useProblem = () : UseProblemReturn => {
   const { user } = useUser();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   //const queryClient = useQueryClient();
     const generateProblemWithProgress = async ({
     conceptFiles,
@@ -30,7 +31,7 @@ export const useProblem = () : UseProblemReturn => {
 
     try {
       const response = await fetch(
-        `https://api.improfessor.o-r.kr/api/problems/${user.userId}`,
+        `${API_URL}/api/problems/${user.userId}`,
         {
           method: "POST",
           body: formData,

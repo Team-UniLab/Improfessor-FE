@@ -16,21 +16,22 @@ const LoginPage=() => {
   const { useLogin } = useAuth();
   const login = useLogin();
   const { showAlert } = useAlert();
-  const [kakaoUrl, setKakaoUrl] = useState<string>("https://api.improfessor.o-r.kr/oauth2/authorization/kakao");
+  const [kakaoUrl, setKakaoUrl] = useState<string>("");
 
   // 로컬 개발환경에서 리다이렉트 URI를 localhost로 설정
 useEffect(() => {
   if (typeof window !== "undefined") {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const baseKakaoUrl = `${API_URL}/oauth2/authorization/kakao`;
     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    const url = new URL("https://api.improfessor.o-r.kr/oauth2/authorization/kakao");
+    const url = new URL(baseKakaoUrl);
 
-    if (isLocal) {
-      url.searchParams.set("redirect_uri", "http://localhost:5173/kakao/callback");
-    } else {
-      url.searchParams.set("redirect_uri", "https://improfessor-fe-eta.vercel.app/kakao/callback");
-    }
+    const redirectUri = isLocal
+        ? process.env.NEXT_PUBLIC_REDIRECT_LOCAL
+        : process.env.NEXT_PUBLIC_REDIRECT_PROD;
 
-    setKakaoUrl(url.toString());
+      url.searchParams.set("redirect_uri", redirectUri || "");
+      setKakaoUrl(url.toString());
   }
 }, []);
 
@@ -89,7 +90,7 @@ useEffect(() => {
 
           {/* ID */}
           <FieldRow>
-            <Label>Login</Label>
+            <Label>Email</Label>
             <InputBox
               id="email"
               value={formData.email}
@@ -190,7 +191,7 @@ const Title = styled.div`
   font-weight: 700;
   line-height: normal;
   margin-bottom: 32px;
-  margin-left: 50px;
+  margin-left: 70px;
 `;
 
 const FieldRow = styled.div`
@@ -201,13 +202,14 @@ const FieldRow = styled.div`
 `;
 
 const Label = styled.div`
-  width: 50px;
+  width: 45px;
   font-size: 18px;
   font-style: normal; 
   font-weight: 400;
   line-height: normal;
   text-align: right;
   padding-right: 25px;
+  margin-right: 25px;
 `;
 
 const InputBox = styled.input`
@@ -246,11 +248,11 @@ const LoginButton = styled.button`
   background: var(--black-100, linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), 
   linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #000);
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.70);
-  margin-left: 50px;
+  margin-left: 70px;
 `;
 
 const Divider = styled.div`
-  margin-left: 50px;
+  margin-left: 70px;
   display: flex;
   align-items: center;
   color: white;
@@ -271,14 +273,14 @@ const Divider = styled.div`
 `;
 
 const KakaoButton = styled.a`
-  margin-left: 50px;
+  margin-left: 70px;
   margin-top: 24px;
 `;
 
 const SignupText = styled.div`
   margin-top: 46px;
   text-align: center;
-  margin-left: 50px;
+  margin-left: 75px;
   a {
     color: white;
     text-decoration: none;

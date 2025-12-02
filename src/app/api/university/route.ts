@@ -18,7 +18,13 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get('page') || '1';
   const type = searchParams.get('type') || 'university';
 
-  const API_KEY = 'qqE4EUYf7PqLHIAzLTlLONl%2BDy%2BQ0HSFXzz9rRHcRCxmwCMilL8Of9ay7py2Fc%2FUWx%2BHMHHV7GGLvEeZMhgHLA%3D%3D';
+  const API_KEY = process.env.ACADEMY_API_KEY;
+   if (!API_KEY) {
+    return NextResponse.json(
+      { error: "API Key missing" },
+      { status: 500 }
+    );
+  }
 
   try {
     const baseUrl = 'http://openapi.academyinfo.go.kr/openapi/service/rest/SchoolMajorInfoService/getSchoolMajorInfo';
