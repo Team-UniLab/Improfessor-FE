@@ -1,9 +1,9 @@
 'use client';
 
 import Header from "@/components/Header";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import useProblem from "@/hooks/useProblem";
+import {useProblem} from "@/hooks/useProblem";
 import { useAlert } from "@/context/AlertContext";
 import { useUser } from "@/context/UserContext";
 import styled from "styled-components";
@@ -20,9 +20,11 @@ const GeneratePage=() => {
   const formatFileRef = useRef<HTMLInputElement>(null);
   const [conceptFileName, setConceptFileName] = useState<string>('');
   const [formatFileName, setFormatFileName] = useState<string>('');
+  const { generateProblemWithProgress } = useProblem();
+  const [progress, setProgress] = useState(0);
+  const [progressStage, setProgressStage] = useState("");
 
-  const { useGenerateProblem } = useProblem();
-  const generateProblemMutation = useGenerateProblem();
+
   const handleConceptFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -60,66 +62,79 @@ const GeneratePage=() => {
       setFormatFileName(file.name);
     }
   };
+const handleGenerate = async () => {
+  if (!isAuthenticated) {
+    showAlert("로그인이 필요합니다.");
+    return;
+  }
 
-  const handleGenerate = async () => {
-    // 로그인 체크
-    if (!isAuthenticated) {
-      showAlert('로그인이 필요합니다.');
+  if (!user || user.freeCount <= 0) {
+    showAlert("무료 생성 횟수가 부족합니다.");
+    return;
+  }
+
+  const conceptFiles = conceptFileRef.current?.files;
+  if (!conceptFiles || conceptFiles.length === 0) {
+    showAlert("수업 자료를 업로드해주세요.");
+    return;
+  }
+
+  const maxSize = 15 * 1024 * 1024;
+
+  // 필수 파일 크기 체크
+  for (const f of conceptFiles) {
+    if (f.size > maxSize) {
+      showAlert(`${f.name} 파일이 15MB를 초과합니다.`);
       return;
     }
+  }
 
-    // freeCount 체크
-    if (!user || user.freeCount <= 0) {
-      showAlert('무료 생성 횟수가 부족합니다. 마이페이지에서 확인해주세요.');
-      return;
-    }
-
-    const conceptFiles = conceptFileRef.current?.files;
-    if (!conceptFiles || conceptFiles.length === 0) {
-      showAlert('수업 자료를 업로드해주세요.');
-      return;
-    }
-
-    // 파일 크기 재체크
-    const maxSize = 15 * 1024 * 1024; // 15MB
-    for (let i = 0; i < conceptFiles.length; i++) {
-      if (conceptFiles[i].size > maxSize) {
-        showAlert(`수업 자료 파일 "${conceptFiles[i].name}"의 크기가 15MB를 초과합니다.`);
+  // 선택 파일 크기 체크
+  const formatFiles = formatFileRef.current?.files;
+  if (formatFiles) {
+    for (const f of formatFiles) {
+      if (f.size > maxSize) {
+        showAlert(`${f.name} 파일이 15MB를 초과합니다.`);
         return;
       }
     }
+  }
 
-    setIsLoading(true);
-    try {
-      const formatFiles = formatFileRef.current?.files;
-      
-      // 족보 파일 크기 체크
-      if (formatFiles) {
-        for (let i = 0; i < formatFiles.length; i++) {
-          if (formatFiles[i].size > maxSize) {
-            showAlert(`족보 파일 "${formatFiles[i].name}"의 크기가 15MB를 초과합니다.`);
-            setIsLoading(false);
-            return;
-          }
-        }
-      }
+  setIsLoading(true);
+  setProgress(0);
+  setProgressStage("문제 생성 시작...");
 
-      const response = await generateProblemMutation.mutateAsync({
-        conceptFiles: Array.from(conceptFiles),
-        formatFiles: formatFiles ? Array.from(formatFiles) : undefined,
-      });
+   generateProblemWithProgress({
+      conceptFiles: Array.from(conceptFiles),
+      formatFiles: formatFiles ? Array.from(formatFiles) : undefined,
 
-      const state = {
-        problems: response.data.problems
-      };
-      router.push(`/result?state=${encodeURIComponent(JSON.stringify(state))}`);
-    } catch (error) {
-      console.error('문제 생성 실패:', error);
-      showAlert('문제 생성에 실패했습니다.');
-      setIsLoading(false);
-    }
-  };
+      onProgress: ({ stage, progress, message }) => {
+        setProgress(progress);
+        setProgressStage(message || stage);
+      },
 
+      onComplete: (finalData) => {
+        console.log("완료된 데이터:", finalData);
+
+        localStorage.setItem("generateResult", JSON.stringify(finalData));
+        router.push("/result");
+      },
+
+      onError: (err) => {
+        console.error("문제 생성 중 오류:", err);
+        showAlert("문제 생성 중 오류가 발생했습니다.");
+        setIsLoading(false);
+      },
+    });
+  }
+
+  useEffect(() => {
+  if (!progressStage) return;
+  console.log("최신 progressStage:", progressStage);
+}, [progressStage]);
+
+
+  
 
   return (
     <Wrapper>
@@ -174,10 +189,7 @@ const GeneratePage=() => {
             />
 
             <UploadLabel onClick={handleFormatFileClick}>
-              <UploadIcon>
-                <path d="M24 32V16M16 24L24 16L32 24" stroke="#777" strokeWidth="2" />
-                <path d="M8 32H40" stroke="#777" strokeWidth="2" />
-              </UploadIcon>
+              <UploadIcon />
               <UploadText>{formatFileName || "파일 선택하기 (선택)"}</UploadText>
               <UploadSub>
                 <UploadGroup>
@@ -194,7 +206,7 @@ const GeneratePage=() => {
           </UploadBox>
         </Card>
         <GenerateButton onClick={handleGenerate} disabled={isLoading}>
-          {isLoading ? "문제 생성 중..." : "문제 생성하기"}
+          {isLoading ? `진행중... (${progress}%)` : "문제 생성하기"}
         </GenerateButton>
       </ContentWrapper>
     </Wrapper>
