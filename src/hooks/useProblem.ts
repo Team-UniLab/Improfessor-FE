@@ -1,101 +1,116 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { axiosInstance } from '@/lib/axios';
-import { GenerateProblemResponse, GenerateProblemRequest, Problem } from '@/types/problem';
+import { useQueryClient } from '@tanstack/react-query';
+//import { axiosInstance } from '@/lib/axios';
+import {  Problem } from '@/types/problem';
 import { useUser } from '@/context/UserContext';
-import { ApiResponse, UserInfo } from '@/types/auth';
+//import { ApiResponse, UserInfo } from '@/types/auth';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+type UseProblemReturn = {
+  generateProblemWithProgress: (args: {
+    conceptFiles: File[];
+    formatFiles?: File[];
+    onProgress: (data: { stage: string; progress: number; message: string }) => void;
+    onComplete: (data: any) => void;
+    onError?: (err: any) => void;
+  }) => Promise<void>;
+};
 
-export const useProblem = () => {
+
+export const useProblem = () : UseProblemReturn => {
   const { user } = useUser();
   const queryClient = useQueryClient();
+     const generateProblemWithProgress = async ({
+    conceptFiles,
+    formatFiles,
+    onProgress,
+    onComplete,
+    onError,
+  }: {
+    conceptFiles: File[];
+    formatFiles?: File[];
+    onProgress: (data: { stage: string; progress: number; message: string }) => void;
+    onComplete: (data: any) => void;
+    onError?: (err: any) => void;
+  }) => {
+    if (!user?.userId) return;
 
-  // 문제 생성
-  const useGenerateProblem = () => {
-    return useMutation({
-      mutationFn: async ({ conceptFiles, formatFiles }: GenerateProblemRequest) => {
-        const formData = new FormData();
-        
-        // conceptFiles 추가
-        conceptFiles.forEach((file) => {
-          formData.append('conceptFiles', file);
-        });
+    const formData = new FormData();
+    conceptFiles.forEach((f) => formData.append("conceptFiles", f));
+    formatFiles?.forEach((f) => formData.append("formatFiles", f));
 
-        // formatFiles가 있는 경우 추가
-        if (formatFiles) {
-          formatFiles.forEach((file) => {
-            formData.append('formatFiles', file);
-          });
+    try {
+      const response = await fetch(
+        `https://api.improfessor.o-r.kr/api/problems/${user.userId}`,
+        {
+          method: "POST",
+          body: formData,
         }
+      );
 
-        const response = await axiosInstance.post(`/api/problems/${user?.userId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        return response.data as GenerateProblemResponse;
-      },
-      onMutate: async () => {
-        const userId = user?.userId;
-        const previousById = userId
-          ? queryClient.getQueryData<ApiResponse<UserInfo>>(['userInfo', userId])
-          : undefined;
-        const previousGeneric = queryClient.getQueryData<ApiResponse<UserInfo>>(['userInfo']);
+      if (!response.body) throw new Error("ReadableStream not supported");
 
-        if (userId) {
-          queryClient.setQueryData<ApiResponse<UserInfo> | undefined>(
-            ['userInfo', userId],
-            (prev) => {
-              if (!prev || !prev.data) return prev;
-              return {
-                ...prev,
-                data: {
-                  ...prev.data,
-                  freeCount: Math.max(0, (prev.data.freeCount ?? 0) - 1),
-                },
-              };
-            }
-          );
-        }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
 
-        if (previousGeneric) {
-          queryClient.setQueryData<ApiResponse<UserInfo> | undefined>(
-            ['userInfo'],
-            (prev) => {
-              if (!prev || !prev.data) return prev;
-              return {
-                ...prev,
-                data: {
-                  ...prev.data,
-                  freeCount: Math.max(0, (prev.data.freeCount ?? 0) - 1),
-                },
-              };
-            }
-          );
-        }
+      let buffer = "";
 
-        return { previousById, previousGeneric } as {
-          previousById?: ApiResponse<UserInfo>;
-          previousGeneric?: ApiResponse<UserInfo>;
-        };
-      },
-      onError: (_error, _variables, context) => {
-        const userId = user?.userId;
-        if (userId && context?.previousById !== undefined) {
-          queryClient.setQueryData(['userInfo', userId], context.previousById);
-        }
-        if (context?.previousGeneric !== undefined) {
-          queryClient.setQueryData(['userInfo'], context.previousGeneric);
-        }
-      },
-      onSettled: () => {
-        const userId = user?.userId;
-        if (userId) {
-          queryClient.invalidateQueries({ queryKey: ['userInfo', userId] });
-        }
-        queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-      },
-    });
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // SSE는 \n\n로 이벤트가 구분됨
+        const events = buffer.split("\n\n");
+
+        // 마지막은 완전하지 않을 수 있으니 buffer에 남겨둠
+        buffer = events.pop() || "";
+
+        for (const event of events) {
+  if (!event.trim()) continue;
+
+  const lines = event.trim().split("\n");
+
+  let eventName = "";
+  let dataJson: any = null;
+
+  for (const line of lines) {
+    if (line.startsWith("event")) {
+      // event: progress / event:progress 다 잡음
+      eventName = line.replace("event:", "").trim();
+    }
+
+    if (line.startsWith("data")) {
+      // data: {...} / data:{...} 다 잡음
+      const jsonStr = line.replace("data:", "").trim();
+      try {
+        dataJson = JSON.parse(jsonStr);
+      } catch (e) {
+        console.warn("JSON 파싱 실패:", line);
+      }
+    }
+  }
+
+  if (!eventName || !dataJson) continue;
+
+  if (eventName === "progress") {
+    onProgress(dataJson);
+  }
+
+  if (eventName === "complete") {
+    onComplete(dataJson);
+  }
+}
+
+      }
+    } catch (err) {
+      console.error("SSE 처리 실패:", err);
+      onError?.(err);
+    }
+  };
+
+  return {
+    generateProblemWithProgress,
   };
 
   // 기존 서버 PDF 다운로드 (임시 주석 처리)

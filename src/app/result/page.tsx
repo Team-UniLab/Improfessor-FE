@@ -9,27 +9,28 @@ import styled from 'styled-components';
 
 const ResultPage =()=> {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
   const { downloadProblemPDF } = useProblem();
   
   const [isLoading, setIsLoading] = useState(false);
   const [problems, setProblems] = useState<Problem[]>([]);
 
-  useEffect(() => {
-    // URL에서 상태 복원
-    const state = searchParams.get('state');
-    if (state) {
+   useEffect(() => {
+    // 🔥 localStorage에서 결과 불러오기
+    const stored = localStorage.getItem("generateResult");
+
+    if (stored) {
       try {
-        const { problems } = JSON.parse(state);
-        setProblems(problems);
-      } catch (error) {
-        console.error('상태 복원 실패:', error);
+        const parsed = JSON.parse(stored);
+        setProblems(parsed.problems);
+      } catch (err) {
+        console.error("JSON parse error:", err);
         router.push('/generate');
       }
     } else {
       router.push('/generate');
     }
-  }, [searchParams, router]);
+  }, [router]);
 
   const handleDownload = async () => {
     if (!problems.length) return;
