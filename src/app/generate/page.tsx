@@ -41,15 +41,17 @@ const GeneratePage=() => {
   };
 
   const handleFormatFileClick = (e: React.MouseEvent) => {
-    if (!conceptFileRef.current?.files?.length) {
-      e.preventDefault();
-      showAlert('수업 자료를 먼저 업로드해 주세요.');
-      return;
-    }
-  };
+  if (!conceptFileRef.current?.files?.length) {
+    e.preventDefault();
+    showAlert("수업 자료를 먼저 업로드해 주세요.");
+    return;
+  }
+  formatFileRef.current?.click(); // ★ 파일 선택창 열기
+};
 
   const handleFormatFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+     console.log("📌 format file 선택됨:", file);
     if (file) {
       // 파일 크기 체크 (15MB = 15 * 1024 * 1024 bytes)
       const maxSize = 15 * 1024 * 1024; // 15MB
