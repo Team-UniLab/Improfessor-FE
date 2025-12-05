@@ -194,7 +194,7 @@ const Dropdown = styled.div`
   backdrop-filter: blur(10px);
   @media (max-width: 768px) {
     padding: 4px 0;
-  
+    backdrop-filter: blur(10px);
   }
 `;
 
@@ -230,6 +230,7 @@ const DropdownLink = styled(Link)`
   font-weight: 600;
   line-height: 140%; 
   text-decoration: none;
+  color: white;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
