@@ -122,9 +122,9 @@ const handleGenerate = async () => {
         router.push("/result");
       },
 
-      onError: (err) => {
+        onError: (err) => {
         console.error("문제 생성 중 오류:", err);
-        showAlert("문제 생성 중 오류가 발생했습니다.");
+        showAlert("파일 업로드에 실패했습니다.");
         setIsLoading(false);
       },
     });
@@ -160,7 +160,9 @@ const handleGenerate = async () => {
             />
 
             <UploadLabel onClick={() => conceptFileRef.current?.click()}>
+              <IconWrapper>
               <UploadIcon />
+              </IconWrapper>
               <UploadText>{conceptFileName || "파일 선택하기 (필수)"}</UploadText>
               <UploadSub>
                 <UploadGroup>
@@ -187,7 +189,9 @@ const handleGenerate = async () => {
             />
 
             <UploadLabel onClick={handleFormatFileClick}>
+              <IconWrapper>
               <UploadIcon />
+              </IconWrapper>
               <UploadText>{formatFileName || "파일 선택하기 (선택)"}</UploadText>
               <UploadSub>
                 <UploadGroup>
@@ -230,6 +234,10 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 768px) {
+    padding: 53px 37.5px 175px 37.5px;
+    width: 100%;
+  }
 `;
 
 const PageTitle = styled.h1`
@@ -240,6 +248,9 @@ const PageTitle = styled.h1`
   line-height: normal;
   margin-bottom: 15px;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  @media (max-width: 768px) {
+    font-size: 40px;
+  }
 `;
 
 const SubText = styled.p`
@@ -250,6 +261,9 @@ const SubText = styled.p`
   font-weight: 400;
   line-height: 140%;
   margin-bottom: 71px;
+    @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const Card = styled.div`
@@ -260,6 +274,11 @@ const Card = styled.div`
   min-width: 575px;
   max-width: 1100px;
   width: 90vw;
+  @media (max-width: 768px) {
+    width: 318px;
+    min-width: unset;
+    padding: 30px 20px;
+  }
 `;
 
 const CardTitle = styled.h2`
@@ -268,6 +287,9 @@ const CardTitle = styled.h2`
   font-weight: 600;
   line-height: 140%;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
 `;
 
 const CardDesc = styled.p`
@@ -277,8 +299,24 @@ const CardDesc = styled.p`
   font-weight: 400;
   line-height: 140%;
   margin-bottom: 43px;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
+const IconWrapper = styled.div`
+  svg {
+    width: 100px;
+    height: 100px;
+  }
+
+  @media (max-width: 768px) {
+    svg {
+      width: 60px;
+      height: 60px;  /* 모바일에서 작게 */
+    }
+  }
+`;
 const UploadBox = styled.div`
   border-radius: 20px;
   border: 1px solid var(--white-50, rgba(255, 255, 255, 0.50));
@@ -287,6 +325,12 @@ const UploadBox = styled.div`
   text-align: center;
   min-width: 475px;
   max-width: 1000px;
+  @media (max-width: 768px) {
+    width: 278px;
+    min-width: 278px;
+    padding: 30px 0;
+    margin: 0 auto;
+  }
 `;
 
 const HiddenInput = styled.input`
@@ -308,6 +352,9 @@ const UploadText = styled.div`
   line-height: 140%;
   margin-bottom: 20px;
   margin-top: 20px;
+    @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const UploadSub = styled.div`
@@ -347,6 +394,12 @@ const GenerateButton = styled.button`
   align-items: center;
   &:disabled {
     cursor: not-allowed;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+    height: 60px;
+    width: 280px;
+    margin-top: 0px;
   }
 `;
 
