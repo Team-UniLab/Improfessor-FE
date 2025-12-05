@@ -165,10 +165,6 @@ const handleGenerate = async () => {
                 PDF
                 <CheckIcon />
                 </UploadGroup>
-                <UploadGroup>
-                PPT 
-                <CheckIcon />
-                </UploadGroup>
                 각 15MB 이하
               </UploadSub>
             </UploadLabel>
@@ -194,10 +190,6 @@ const handleGenerate = async () => {
               <UploadSub>
                 <UploadGroup>
                 PDF
-                <CheckIcon />
-                </UploadGroup>
-                <UploadGroup>
-                PPT 
                 <CheckIcon />
                 </UploadGroup>
                 각 15MB 이하
@@ -332,7 +324,7 @@ const UploadGroup = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
 `
 
 const GenerateButton = styled.button`

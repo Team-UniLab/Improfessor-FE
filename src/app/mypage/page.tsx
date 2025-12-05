@@ -2,7 +2,7 @@
 
 import Header from "@/components/Header";
 import { useUser } from "@/context/UserContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 //import {useEffect} from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
@@ -16,7 +16,7 @@ import styled from "styled-components";
 export default function MyPage() {
   const router = useRouter();
   const { user, isLoading, error } = useUser();
-  //const { isAuthenticated } = useUser();
+  const { isAuthenticated } = useUser();
   const { useUpdateUser, useDeleteUser } = useAuth();
   const updateUser = useUpdateUser();
   const deleteUser = useDeleteUser();
@@ -31,16 +31,22 @@ export default function MyPage() {
   // const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
   // const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
 
-  // // 인증되지 않은 경우 로그인 페이지로 리다이렉트
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     router.push('/login');
-  //   }
-  // }, [isAuthenticated, router]);
+  // 인증되지 않은 경우 로그인 페이지로 리다이렉트
+  // 인증 체크
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
 
-  // if (!isAuthenticated) {
-  //   return null;
-  // }
+  // user 로드 후 state 초기화
+  useEffect(() => {
+    if (user) {
+      setNickname(user.nickname ?? "");
+      setUniversity(user.university ?? null);
+      setMajor(user.major ?? null);
+    }
+  }, [user]);
 
    if (isLoading) {
     return (
