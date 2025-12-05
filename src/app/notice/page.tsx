@@ -69,6 +69,7 @@ export default function NoticePage() {
               toggleOpen(notice.noticeId);
             }}
           >
+            <IconWrapper>
             <ArrowIcon
               style={{
                 transform:
@@ -76,6 +77,7 @@ export default function NoticePage() {
                 transition: "0.2s",
               }}
             />
+            </IconWrapper>
           </ArrowBtn>
         </ArrowTd>
       </Tr>
@@ -113,6 +115,10 @@ const Content = styled.main`
   max-width: 1100px;
   margin: 0 auto;
   padding: 77px 120px 180px 120px;
+  @media (max-width: 768px) {
+    padding: 45px 30px 200px 30px;
+    
+  }
 `;
 
 const Card = styled.div`
@@ -126,6 +132,9 @@ const Title = styled.h1`
   font-weight: 600;
   line-height: 140%;
   margin-bottom: 43px;
+  @media (max-width: 768px) {
+   font-size: 20px;
+  }
 `;
 
 const TableWrapper = styled.div`
@@ -140,6 +149,9 @@ const StyledTable = styled.table`
     background: rgba(255, 255, 255, 0.1);
     height: 48px;
     padding: 30px 20px;
+    @media (max-width: 768px) {
+      padding: 30px 10px;
+  }
   }
 `;
 
@@ -151,6 +163,9 @@ const Th = styled.th<{ width?: string }>`
   text-align: center;
   border-bottom: 1px solid rgba(255,255,255,0.15);
   width: ${(props) => props.width || "auto"};
+    @media (max-width: 768px) {
+   font-size: 14px;
+  }
 `;
 
 const Td = styled.td`
@@ -160,6 +175,9 @@ const Td = styled.td`
   font-weight: 600;
   line-height: 140%;
   text-align: center;
+    @media (max-width: 768px) {
+   font-size: 14px;
+  }
 `;
 
 const Tr = styled.tr<{ isOpen: boolean }>`
@@ -173,6 +191,20 @@ const FlexRow = styled.div`
   align-items: center;
   text-align: center;
   justify-content: center;
+`;
+
+const IconWrapper = styled.div`
+  svg {
+    width: 18px;
+    height: 10px;
+  }
+
+  @media (max-width: 768px) {
+    svg {
+      width: 12px;
+      height: 8px;  /* 모바일에서 작게 */
+    }
+  }
 `;
 
 const ArrowBtn = styled.button`
@@ -194,6 +226,10 @@ const TdContent = styled.td`
   text-align: center;
   width: 484px;
   border-bottom: 1px solid var(--white-50, rgba(255, 255, 255, 0.50));
+  @media (max-width: 768px) {
+    padding: 10px;
+   font-size: 12px;
+  }
 `;
 
 const ArrowTd = styled.td`
