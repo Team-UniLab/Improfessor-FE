@@ -294,9 +294,8 @@ const Wrapper = styled.div`
   min-height: 100vh;
   background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
   padding-top: 24px;
-    @media (max-width: 768px) {
+  @media (max-width: 768px) {
       padding-top: 76px;
-
   }
 `;
 
@@ -377,6 +376,7 @@ const Label = styled.div`
   @media (max-width: 768px) {
     font-size: 18px;
     font-weight: 400;
+    width: auto;
   }
 `;
 
@@ -409,7 +409,7 @@ const Input2 = styled.input`
   }
   margin-right: 25px;
   @media (max-width: 768px) {
-    width: 260px;
+    width: 240px;
     font-size: 16px;
     margin-right: 12px;
 

@@ -123,7 +123,7 @@ const Logo = styled(Link)`
   font-size: 26px;
   font-style: normal;
   font-weight: 700;
-  line-height: 140%
+  line-height: 140%;
   color: white;
   text-decoration: none;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.70);
