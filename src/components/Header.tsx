@@ -192,9 +192,9 @@ const Dropdown = styled.div`
   background: var(--bright-navy-4, rgba(50, 116, 239, 0.04));
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(12px); 
   @media (max-width: 768px) {
     padding: 4px 0;
-    backdrop-filter: blur(10px);
   }
 `;
 
