@@ -9,14 +9,6 @@ import styled from "styled-components";
 
   return (
     <Wrapper>
-       <BackgroundVideo
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src="/background.mp4" type="video/mp4" />
-      </BackgroundVideo>
       <Content>
       <Card>
         <Title>내가 교수님</Title>
@@ -51,24 +43,9 @@ const Wrapper = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.70) 100%);
-    z-index: 1; /* 내용 위에 올려 덮는 레이어 */
-  }
+  background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
 `;
 
-const BackgroundVideo = styled.video`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0; /* 가장 뒤 */
-`;
 const Content = styled.div`
   position: relative;
   z-index: 2;

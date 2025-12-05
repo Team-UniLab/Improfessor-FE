@@ -9,14 +9,6 @@ const SignupCompletePage=() => {
  const name = params.get("name");
   return (
     <Wrapper>
-       <BackgroundVideo
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src="/background.mp4" type="video/mp4" />
-      </BackgroundVideo>
       <Content>
         <Title>
           안녕하세요, <span>{name}</span> 님
@@ -42,25 +34,8 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 24px;
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%);
-      z-index: 1; /* 내용 위에 올려 덮는 레이어 */
-    }
+  background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
 `;
-
-  const BackgroundVideo = styled.video`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0; /* 가장 뒤 */
-  `;
-
 
 const Content = styled.div`
   position: relative;

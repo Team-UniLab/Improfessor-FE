@@ -200,14 +200,6 @@ import BackIcon from "@/assets/buttons/back.svg";
 
 return(
 <Wrapper>
- <BackgroundVideo
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src="/background.mp4" type="video/mp4" />
-      </BackgroundVideo>
       <Content>
       <BackButton href="/">
         <BackIcon width={40} height={40} />
@@ -390,24 +382,9 @@ const Wrapper = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden; /* 영상 튀어나가는 걸 방지 */
-  
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 1; /* 내용 위에 올려 덮는 레이어 */
-  }
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%);
 `;
-const BackgroundVideo = styled.video`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0; /* 가장 뒤 */
-`;
+
 
 const Content = styled.div`
   position: relative;
