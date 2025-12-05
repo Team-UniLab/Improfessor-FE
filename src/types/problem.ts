@@ -59,3 +59,9 @@ export type UseProblemReturn = {
   }) => Promise<void>;
   downloadProblemPDF: (problems: Problem[]) => Promise<void>;
 };
+
+export interface ProblemError {
+  message: string;
+  code?: string;
+  raw?: unknown; 
+}

@@ -120,7 +120,7 @@ const ConfirmButton = styled.button`
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 150%
+  line-height: 150%;
   cursor: pointer;
   margin: 0 auto;
   border: none;
