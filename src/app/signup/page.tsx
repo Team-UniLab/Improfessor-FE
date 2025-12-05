@@ -520,7 +520,7 @@ const Input = styled.input`
   height: 41px;
     @media (max-width: 768px) {
     //width: 100%;
-    max-width: 300px;
+    max-width: 290px;
     min-width: 180px;
     //width: auto;         
     font-size: 14px;
@@ -545,7 +545,7 @@ const Button = styled.button`
     padding: 0 12px;
     font-size: 14px;
     max-width: 100px;
-    min-width: 49px;
+    min-width: 60px;
   }
 
 `;
@@ -582,7 +582,7 @@ const Text = styled.div`
   margin-right: 10px;
   @media (max-width: 768px) {
   text-align: right;     
-  margin-right: 58px;
+  margin-right: 68px;
   }
 
 `
