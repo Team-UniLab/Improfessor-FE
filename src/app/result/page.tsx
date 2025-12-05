@@ -105,6 +105,9 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+    @media (max-width: 768px) {
+    padding: 53px 12.5px 120px 12.5px;
+  }
 `;
 
 const ResultCard = styled.div`
@@ -113,6 +116,9 @@ const ResultCard = styled.div`
   max-width: 1100px;
   padding: 30px 50px;
   color: white;
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+  }
 `;
 
 const TopBar = styled.div`
@@ -120,12 +126,18 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 43px;
+    @media (max-width: 768px) {
+    margin-bottom: 30px;
+  }
 `;
 
 const Title = styled.h1`
   font-size: 30px;
   font-weight: 600;
   color: white;
+  @media (max-width: 768px) {
+     font-size: 20px;
+  }
 `;
 
 const PDFButton = styled.button`
@@ -136,6 +148,9 @@ const PDFButton = styled.button`
   font-weight: 600;
   color: #405348;
   cursor: pointer;
+    @media (max-width: 768px) {
+     font-size: 14px;
+  }
 
   &:disabled {cursor: not-allowed; }
 `;
@@ -144,6 +159,9 @@ const ProblemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 43px;
+  @media (max-width: 768px) {
+    gap: 30px;
+  }
 `;
 
 const ProblemCard = styled.div`
@@ -158,6 +176,9 @@ const ProblemTitle = styled.h2`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 30px;
+  @media (max-width: 768px) {
+     font-size: 18px;
+  }
 `;
 
 const Section = styled.div`
@@ -168,6 +189,9 @@ const SectionLabel = styled.div`
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+     font-size: 16px;
+  }
 `;
 
 const SectionText = styled.div`
@@ -177,6 +201,9 @@ const SectionText = styled.div`
   font-weight: 400;
   line-height: 140%;
   white-space: pre-wrap;
+  @media (max-width: 768px) {
+     font-size: 14px;
+  }
 `;
 
 const BottomButton = styled.button`
@@ -191,4 +218,7 @@ const BottomButton = styled.button`
   line-height: 140%;
   text-decoration: underline;
   cursor: pointer;
+  @media (max-width: 768px) {
+     font-size: 14px;
+  }
 `;
