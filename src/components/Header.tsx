@@ -106,6 +106,7 @@ const Wrapper = styled.header`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
   @media (max-width: 768px) {
       padding: 20px 30px;
+      width: 90vw;
 
   }
 `;

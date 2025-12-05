@@ -255,7 +255,7 @@ return (
         <Column>
           <PromoLabel2>추천인 코드 입력</PromoLabel2>
             <Group>
-            <Input
+            <Input2
               value={inputReferral}
               onChange={(e) => setInputReferral(e.target.value)}
               placeholder="추천인 코드를 입력하세요"
@@ -293,7 +293,11 @@ return (
 const Wrapper = styled.div`
   min-height: 100vh;
   background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
-  padding-top: 24px;n
+  padding-top: 24px;
+    @media (max-width: 768px) {
+      padding-top: 76px;
+
+  }
 `;
 
 const Content = styled.div`
@@ -301,6 +305,10 @@ const Content = styled.div`
   margin: 0 auto;
   padding: 77px 120px 180px 120px;
   color: white;
+  @media (max-width: 768px) {
+    padding: 45px 40px 200px 40px;
+    width: 100%;
+  }
 `;
 
 const Center = styled.div`
@@ -315,6 +323,9 @@ const Title = styled.h1`
   font-weight: 600;
   line-height: 140%;
   margin-bottom: 77px;
+  @media (max-width: 768px) {
+      display: none;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -323,6 +334,12 @@ const SectionTitle = styled.h2`
   font-weight: 600;
   line-height: 140%;
   margin-bottom: 50px;
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 18px;
+
+
+  }  
 `;
 
 const SectionLine = styled.div`
@@ -331,6 +348,10 @@ const SectionLine = styled.div`
   background: rgba(255,255,255,0.5);
   margin-top: 97px;
   margin-bottom: 85px;
+  @media (max-width: 768px) {
+    margin-top: 69px;
+    margin-bottom: 69px;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -339,6 +360,12 @@ const FormGroup = styled.div`
   flex-direction: row;
   gap: 20px;
   margin-left: 40px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+     margin-left: 0px;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
 `;
 
 const Label = styled.div`
@@ -347,6 +374,10 @@ const Label = styled.div`
   display: flex;
   align-items: center;
   width: 98px;
+  @media (max-width: 768px) {
+    font-size: 18px;
+    font-weight: 400;
+  }
 `;
 
 const Input = styled.input`
@@ -360,6 +391,29 @@ const Input = styled.input`
     cursor: not-allowed;
   }
   margin-right: 25px;
+  @media (max-width: 768px) {
+    width: 280px;
+    font-size: 16px;
+  }
+`;
+
+const Input2 = styled.input`
+  width: 328px;
+  height: 41px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.60);
+  background: var(--white-30, rgba(255, 255, 255, 0.30));
+  &:disabled {
+    cursor: not-allowed;
+  }
+  margin-right: 25px;
+  @media (max-width: 768px) {
+    width: 260px;
+    font-size: 16px;
+    margin-right: 12px;
+
+  }
 `;
 
 const PrimaryButton = styled.button`
@@ -379,6 +433,12 @@ const PrimaryButton = styled.button`
   &:disabled {
     cursor: not-allowed;
   }
+  @media (max-width: 768px) {
+  margin-left: 0px;
+    width: 280px;
+    font-size: 16px;
+    margin-top: 16px;
+  }
 `;
 
 const PromoTitle = styled.h2`
@@ -387,6 +447,11 @@ font-style: normal;
 font-weight: 600;
 line-height: 140%;
 margin-bottom: 17px;
+@media (max-width: 768px) {
+  font-size: 20px;
+  margin-bottom: 10px;
+
+  }
 `;
 
 
@@ -396,6 +461,11 @@ const PromoText = styled.p`
   font-weight: 400;
   line-height: 140%;
   margin-bottom: 70px;
+  @media (max-width: 768px) {
+  font-size: 12px;
+  margin-bottom: 36px;
+
+  }
 `;
 
 const PromoBox = styled.div`
@@ -409,6 +479,11 @@ const PromoBox = styled.div`
   height: 81px;
   justify-content: center;
   margin-left: 20px;
+  @media (max-width: 768px) {
+  height: 50px;
+  margin-left: 0px;
+
+  }
 `;
 
 const PromoLabel = styled.span`
@@ -416,6 +491,9 @@ const PromoLabel = styled.span`
   font-style: normal;
   font-weight: 400;
   line-height: 140%;
+  @media (max-width: 768px) {
+  font-size: 16px;
+  }
 `;
 
 const PromoLabel2 = styled.span`
@@ -424,6 +502,9 @@ const PromoLabel2 = styled.span`
   font-weight: 400;
   line-height: 140%;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+  font-size: 18px;
+  }
 `;
 const PromoCode = styled.span`
   font-size: 30px;
@@ -431,6 +512,9 @@ const PromoCode = styled.span`
   font-weight: 600;
   line-height: 140%; 
   color: white;
+    @media (max-width: 768px) {
+  font-size: 20px;
+  }
 `;
 
 const Row = styled.div`
@@ -438,29 +522,49 @@ const Row = styled.div`
   gap: 100px;
   align-items: center;
   justify-content: center;
+    @media (max-width: 768px) {
+    flex-direction: column;
+     gap: 42px;
+
+  }
 `;
 
 const Column = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
   `;
 
 const Group = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @media (max-width: 768px) {
+    width: 100%;
+  justify-content: center;
+
+  }
   `;
 
 const SmallButton = styled.button`
   height: 41px;
   padding: 0 24px;
   border-radius: 10px;
+  font-size: 16px;
   background: rgba(255, 255, 255, 0.30);
   color: white;
   cursor: pointer;
   margin-left: 17px;
   &:disabled {
     cursor: not-allowed;
+  }
+    @media (max-width: 768px) {
+    padding: 0 16px;
+    margin-left: 0px;
+    font-size: 12px;
+    min-width: 60px;
   }
 `;
 
@@ -471,6 +575,9 @@ const SmallText = styled.div`;
   line-height: 140%;
   text-align: right;
   margin-right: 118px;
+  @media (max-width: 768px) {
+    margin-right: 70px;
+  }
 `;
 
 const DangerButton = styled.button`
@@ -482,4 +589,8 @@ const DangerButton = styled.button`
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.70);
   margin: 140px auto 0 auto;  
   display: block;
+    @media (max-width: 768px) {
+      width: 300px;
+
+  }
 `;
