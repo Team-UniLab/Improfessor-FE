@@ -32,7 +32,6 @@ export default function MyPage() {
   // const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
 
   // 인증되지 않은 경우 로그인 페이지로 리다이렉트
-  // 인증 체크
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/login");
@@ -130,8 +129,8 @@ export default function MyPage() {
 
   const handleDeleteUser = () => {
     showConfirm(
-      '계정을 삭제하시겠습니까?',
-      '현재 해당 서비스는 초기 베타 버전으로 올해 10월 정식 서비스 런칭이 예정되어 있습니다.\n\n모든 데이터는 계정 삭제 후 30일 안에 영구적으로 삭제됩니다.',
+      '계정을 삭제하시겠습니까?\n\n',
+      '모든 데이터는 계정 삭제 후 30일 안에 영구적으로 삭제됩니다.',
       async () => {
       try {
         await deleteUser.mutateAsync(user.userId);
