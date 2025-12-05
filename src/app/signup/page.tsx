@@ -259,11 +259,11 @@ return(
                 onChange={handleChange}
                 placeholder="닉네임을 입력하세요 (필수)"
               />
-              <Button type="button">
+              {/* <Button type="button">
                   중복 확인
-                </Button>
+                </Button> */}
               </Row>
-              <Text1>최소 4~8자, 한영 문자, 숫자 포함</Text1>
+              <Text>최소 4~8자, 한영 문자, 숫자 포함</Text>
               </Column>
               
             </Field>
@@ -383,6 +383,7 @@ const Wrapper = styled.div`
   position: relative;
   overflow: hidden; /* 영상 튀어나가는 걸 방지 */
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%);
+  
 `;
 
 
@@ -393,9 +394,15 @@ const Content = styled.div`
 
 const BackButton = styled(Link)`
   position: absolute;
-  margin-top: 83px;
-  margin-left: 120px;
+  top: 83px;
+  left: 120px;
   z-index: 10;
+  @media (max-width: 768px) {
+    top: 101px;
+    left: 30px;
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 const Center = styled.div`
@@ -405,13 +412,26 @@ const Center = styled.div`
   display:flex;
   justify-content:center;
   //align-items:flex-start;
+  @media (max-width: 768px) {
 
+    padding-top: 97px;
+    align-items: center;
+    justify-content: center;
+    width: 396px;
+    margin: 0 auto;
+  }
 `;
 
 const Card = styled.div`
   //width: 100%;
   border-radius: 18px;
   color: white;
+   @media (max-width: 768px) {
+    width: 90%;
+    align-items: center;
+    justify-content: center;
+
+  }
 
 `;
 
@@ -422,6 +442,10 @@ const Title = styled.h1`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  @media (max-width: 768px) {
+    font-size: 30px;
+    margin-bottom: 41px;
+  }
 `;
 
 const Field = styled.div`
@@ -429,6 +453,11 @@ const Field = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row;
+    @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 356px;
+  }
 `;
 
 const Label = styled.label`
@@ -441,6 +470,12 @@ const Label = styled.label`
   align-items: center;
   margin-right: 20px;
   width: 150px;
+  @media (max-width: 768px) {
+    margin-right: 0px;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+
+  }
 `;
 
 const Label1 = styled.label`
@@ -454,11 +489,21 @@ const Label1 = styled.label`
   margin-right: 20px;
   width: 150px;
   margin-bottom: 17px;
+    @media (max-width: 768px) {
+    margin-right: 0px;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+  }
 `;
 
 const Row = styled.div`
   display: flex;
   gap: 22px;
+  @media (max-width: 768px) {
+    gap: 12px;
+    width: 100%;
+   // min-width: 0;
+  }
 `;
 
 const Input = styled.input`
@@ -473,6 +518,15 @@ const Input = styled.input`
   line-height: 140%;
   width: 328px;
   height: 41px;
+    @media (max-width: 768px) {
+    //width: 100%;
+    max-width: 290px;
+    min-width: 180px;
+    //width: auto;         
+    font-size: 14px;
+    height: 41px;
+
+  }
 `;
 
 const Button = styled.button`
@@ -487,6 +541,12 @@ const Button = styled.button`
   font-weight: 600;
   line-height: 150%;
   cursor: pointer;
+  @media (max-width: 768px) {
+    padding: 0 12px;
+    font-size: 14px;
+    max-width: 100px;
+    min-width: 60px;
+  }
 
 `;
 
@@ -507,6 +567,9 @@ const SubmitButton = styled.button`
   line-height: 150%;
   margin-left: 170px;
   cursor: pointer;
+  @media (max-width: 768px) {
+    margin: 0 auto;
+  }
 
 `;
 const Text = styled.div`
@@ -517,19 +580,18 @@ const Text = styled.div`
   font-weight: 400;
   line-height: 140%;
   margin-right: 10px;
-`
-const Text1 = styled.div`
-  color: var(--white-100, #FFF);
-  text-align: right;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 140%;
-  margin-right: 138px;
+  @media (max-width: 768px) {
+  text-align: right;     
+  margin-right: 68px;
+  }
+
 `
 const Column = styled.div`
   display: flex;
   flex-direction: column;
+    @media (max-width: 768px) {
+    width: 100%;
+  }
 
   `
 

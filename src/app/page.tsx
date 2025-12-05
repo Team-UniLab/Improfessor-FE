@@ -58,6 +58,12 @@ const Card = styled.div`
   width: 769px;
   height: 453px;
   padding-top: 44px;
+   @media (max-width: 768px) {
+    width: 90%;
+    height: 453px;
+    padding: 30px 16px;
+    margin: 0 auto;
+  }
 `;
 
 const Title = styled.div`
@@ -68,6 +74,9 @@ const Title = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+    @media (max-width: 768px) {
+    font-size: 56px;
+  }
 `;
 
 const Subtitle = styled.div`
@@ -79,6 +88,11 @@ const Subtitle = styled.div`
   font-weight: 600;
   line-height: 140%; /* 28px */
   margin-top: 14px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 34px;
+  }
 `;
 
 const Button = styled(Link)`
@@ -98,6 +112,9 @@ const Button = styled(Link)`
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
   margin-top: 58px;
   padding-top: 20px;
+  @media (max-width: 768px) {
+    margin-top: 46px;
+  }
 `;
 
 const BottomText = styled.div`
@@ -108,6 +125,9 @@ const BottomText = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const BottomLink = styled(Link)`
@@ -121,5 +141,8 @@ const BottomLink = styled(Link)`
   margin-left: 30px;
   &:hover {
     color: white;
+  }
+  @media (max-width: 768px) {
+    font-size: 16px;
   }
 `;

@@ -137,12 +137,16 @@ const Content = styled.div`
 
 const BackButton = styled(Link)`
   position: absolute;
-  margin-top: 140px;
-  margin-left: 120px;
+  top: 140px;
+  left: 120px;
   z-index: 10;
   color: white;
   &:hover {
     opacity: 1;
+  }
+  @media (max-width: 768px) {
+    top: 101px;
+    left: 30px;
   }
 `;
 
@@ -151,6 +155,12 @@ const CenterContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 768px) {
+    width: 90%;
+    margin: 0 auto;
+    align-items: start;
+    padding-top: 97px;
+  }
 `;
 
 const Panel = styled.div`
@@ -169,6 +179,11 @@ const Title = styled.div`
   line-height: normal;
   margin-bottom: 32px;
   margin-left: 70px;
+  @media (max-width: 768px) {
+    font-size: 30px;
+    margin-bottom: 80px;
+    margin-left: 0px;
+  }
 `;
 
 const FieldRow = styled.div`
@@ -176,6 +191,10 @@ const FieldRow = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 25px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Label = styled.div`
@@ -187,6 +206,9 @@ const Label = styled.div`
   text-align: right;
   padding-right: 25px;
   margin-right: 25px;
+  @media (max-width: 768px) {
+    margin-bottom: 5px;
+  }
 `;
 
 const InputBox = styled.input`
@@ -209,6 +231,9 @@ const InputBox = styled.input`
     outline: none;
     border-color: white;
   }
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const LoginButton = styled.button`
@@ -226,6 +251,10 @@ const LoginButton = styled.button`
   linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #000);
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.70);
   margin-left: 70px;
+  @media (max-width: 768px) {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
 `;
 
 const Divider = styled.div`
@@ -247,11 +276,17 @@ const Divider = styled.div`
   span {
     margin: 0 12px;
   }
+  @media (max-width: 768px) {
+    margin-left: 0px;
+  }
 `;
 
 const KakaoButton = styled.a`
   margin-left: 70px;
   margin-top: 24px;
+  @media (max-width: 768px) {
+    margin-left: 0px;
+  }
 `;
 
 const SignupText = styled.div`
@@ -265,5 +300,8 @@ const SignupText = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 140%;
+  }
+  @media (max-width: 768px) {
+    margin-left: 0px;
   }
 `;

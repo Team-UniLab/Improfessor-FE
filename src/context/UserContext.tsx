@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/lib/axios';
-import { getUserIdFromToken } from '@/lib/utils';
+import { getUserIdFromToken, decodeToken } from '@/lib/utils';
 import { UserInfo, ApiResponse } from '@/types/auth';
 
 interface UserContextType {
@@ -34,46 +34,53 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // 토큰에서 사용자 ID 추출
   useEffect(() => {
-    const checkToken = () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        const extractedUserId = getUserIdFromToken();
-        // 토큰이 있으면 userId를 설정 (디코딩 실패해도 null로 설정)
-        setUserId(extractedUserId);
-        console.log('[UserContext] Token found, userId:', extractedUserId);
-      } else {
-        // 토큰이 없는 경우 userId를 null로 설정하고 사용자 정보 캐시 제거
-        setUserId(null);
-        queryClient.removeQueries({ queryKey: ['userInfo'] });
-        queryClient.removeQueries({ queryKey: ['userInfo', null] });
-        console.log('[UserContext] No token found, userId set to null');
-      }
-    };
+  const checkToken = () => {
+    const token = localStorage.getItem('accessToken');
 
-    checkToken();
+    if (!token) {
+      setUserId(null);
+      queryClient.removeQueries({ queryKey: ['userInfo'] });
+      return;
+    }
 
-    // storage 이벤트 리스너
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'accessToken') {
-        console.log('[UserContext] Storage change detected for accessToken');
-        checkToken();
-      }
-    };
+    const decoded = decodeToken(token);
+    const now = Math.floor(Date.now() / 1000);
 
-    // 커스텀 이벤트 리스너
-    const handleTokenChange = () => {
-      console.log('[UserContext] Token change event received');
+    if (!decoded || !decoded.exp || decoded.exp < now) {
+      console.log('[UserContext] Token expired → clearing...');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      delete axiosInstance.defaults.headers.common['Authorization'];
+      setUserId(null);
+      queryClient.removeQueries({ queryKey: ['userInfo'] });
+      return;
+    }
+
+    const extractedUserId = getUserIdFromToken();
+    setUserId(extractedUserId);
+  };
+
+  checkToken();
+
+  const handleStorageChange = (e: StorageEvent) => {
+    if (e.key === 'accessToken') {
       checkToken();
-    };
+    }
+  };
 
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('tokenChange', handleTokenChange);
+  const handleTokenChange = () => {
+    checkToken();
+  };
 
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('tokenChange', handleTokenChange);
-    };
-  }, [queryClient]);
+  window.addEventListener('storage', handleStorageChange);
+  window.addEventListener('tokenChange', handleTokenChange);
+
+  return () => {
+    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener('tokenChange', handleTokenChange);
+  };
+}, [queryClient]);
+
 
   // 사용자 정보 조회
   const {
