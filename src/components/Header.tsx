@@ -104,6 +104,11 @@ const Wrapper = styled.header`
   border-bottom: 1px solid rgba(255, 255, 255, 0.40);
   background: var(--bright-navy-4, rgba(50, 116, 239, 0.04));
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+  @media (max-width: 768px) {
+      padding: 20px 30px;
+      width: 90vw;
+
+  }
 `;
 
 const InnerContainer = styled.div`
@@ -122,12 +127,18 @@ const Logo = styled(Link)`
   color: white;
   text-decoration: none;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.70);
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
 `;
 
 const RightBox = styled.div`
   display: flex;
   align-items: center;
   gap: 25px;
+    @media (max-width: 768px) {
+    gap: 10px;
+  }
 `;
 
 /* 아이콘 버튼 */
@@ -165,6 +176,9 @@ const Nickname = styled.span`
   font-weight: 400;
   line-height: 140%;
   color: white;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 /* 드롭다운 */
@@ -178,6 +192,10 @@ const Dropdown = styled.div`
   background: var(--bright-navy-4, rgba(50, 116, 239, 0.04));
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
+  @media (max-width: 768px) {
+    padding: 4px 0;
+  
+  }
 `;
 
 const DropdownItem = styled.div`
@@ -186,15 +204,22 @@ const DropdownItem = styled.div`
   color: #ddd;
   font-weight: 400;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+
 `;
 
 const EmailText = styled.div`
   font-size: 14px;
+  @media (max-width: 768px) {
+  font-size: 12px;
+  }
 `;
 
 const SmallText = styled.div`
   font-size: 14px;
   margin-top: 2px;
+  @media (max-width: 768px) {
+  font-size: 12px;
+  }
 `;
 
 const DropdownLink = styled(Link)`
@@ -208,6 +233,9 @@ const DropdownLink = styled(Link)`
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
+  }
+    @media (max-width: 768px) {
+  font-size: 16px;
   }
 `;
 
