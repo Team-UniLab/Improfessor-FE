@@ -35,6 +35,10 @@ const Wrapper = styled.div`
   align-items: center;
   padding-top: 24px;
   background: var(--gra_navy, linear-gradient(180deg, #404D61 0.9%, #1D1C25 100%));
+  @media (max-width: 768px) {
+     align-items: flex-start;
+     padding-top: 224px;
+  }
 `;
 
 const Content = styled.div`
@@ -51,6 +55,10 @@ const Title = styled.h1`
   font-weight: 600; 
   line-height: 140%;
   margin-bottom: 34px;
+  @media (max-width: 768px) {
+    font-size: 52px;
+    margin-bottom: 73px;
+  }
 `;
 
 const SubText = styled.div`
@@ -59,6 +67,11 @@ const SubText = styled.div`
   font-weight: 600;
   line-height: 140%;
   margin-bottom: 109px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    font-weight: 400;
+
+  }
 `;
 
 const LoginButton = styled(Link)`
@@ -69,4 +82,7 @@ const LoginButton = styled(Link)`
   font-weight: 600;
   line-height: 140%;
   text-decoration: underline;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
