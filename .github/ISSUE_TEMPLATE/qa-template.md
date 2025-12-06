@@ -1,7 +1,7 @@
 ---
 name: QA Template
 about: Design QA
-title: ''
+title: 'QA: '
 labels: ''
 assignees: sunny3631
 
