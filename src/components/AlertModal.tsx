@@ -111,12 +111,12 @@ const Message = styled.p`
 `;
 
 const ConfirmButton = styled.button`
-  width: 76px;
-  height: 41px;
+  width: 84px;
+  height: 45px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.30);
   color: white;
-  padding: 0 24px;
+  padding: 0 20px;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
