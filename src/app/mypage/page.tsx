@@ -474,7 +474,7 @@ const PromoBox = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: row;
-  gap: 32px;
+  gap: 25px;
   align-items: center;
   height: 81px;
   justify-content: center;
@@ -507,7 +507,7 @@ const PromoLabel2 = styled.span`
   }
 `;
 const PromoCode = styled.span`
-  font-size: 30px;
+  font-size: 24px;
   font-style: normal;
   font-weight: 600;
   line-height: 140%; 

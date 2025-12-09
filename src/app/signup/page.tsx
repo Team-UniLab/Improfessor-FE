@@ -11,6 +11,8 @@ import { ApiResponse } from "@/types/auth";
 //import MajorSearchModal from "@/components/MajorSearchModal";
 import styled from "styled-components";
 import BackIcon from "@/assets/buttons/back.svg";
+import ValidIcon from "@/assets/icons/correct.svg";
+import InvalidIcon from "@/assets/icons/cancel.svg";
 
   const SignupPage=()=> {
   const router = useRouter();
@@ -19,6 +21,7 @@ import BackIcon from "@/assets/buttons/back.svg";
   const verifyEmail = useVerifyEmail();
   const register = useRegister();
   const { showAlert } = useAlert();
+  const [showVerificationField, setShowVerificationField] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -45,6 +48,17 @@ import BackIcon from "@/assets/buttons/back.svg";
  // const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
  // const [isMajorModalOpen, setIsMajorModalOpen] = useState(false);
 
+ // 닉네임 검증: 4~8자, 한/영/숫자
+const nicknameValid = /^[A-Za-z0-9가-힣]{4,8}$/.test(formData.nickname);
+
+// 비밀번호 검증: 기존 validation 결과 사용
+const passwordValid = passwordValidation.isValid;
+
+// 비밀번호 확인 검증
+const confirmPasswordValid =
+  formData.confirmPassword.length > 0 &&
+  formData.confirmPassword === formData.password;
+
   // 비밀번호 정규식 검증 함수
   const validatePassword = (password: string) => {
     const minLength = password.length >= 8;
@@ -62,20 +76,21 @@ import BackIcon from "@/assets/buttons/back.svg";
   };
 
   useEffect(() => {
-    if (timer === null) return;
-    
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev === null || prev <= 0) {
-          setCanResend(true);
-          return null;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  if (timer === null) return;
 
-    return () => clearInterval(interval);
-  }, [timer]);
+  const interval = setInterval(() => {
+    setTimer(prev => {
+      if (!prev || prev <= 1) {
+        setCanResend(true); 
+        return null;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [timer]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -112,14 +127,15 @@ import BackIcon from "@/assets/buttons/back.svg";
     }
 
     if (!canResend) {
-      showAlert(`${Math.ceil(timer! / 60)}분 ${timer! % 60}초 후에 다시 시도해주세요.`);
-      return;
-    }
+    showAlert(`${Math.floor(timer! / 60)}:${(timer! % 60).toString().padStart(2, '0')} 후에 다시 시도해주세요.`);
+    return;
+  }
 
     try {
       await sendVerification.mutateAsync({ email: formData.email });
-      setTimer(180);
+      setTimer(600);
       setCanResend(false);
+      setShowVerificationField(true);  
       showAlert("인증 코드가 전송되었습니다. 이메일을 확인해주세요.");
     } catch (error) {
       console.error('인증 코드 전송 실패:', error);
@@ -185,7 +201,6 @@ import BackIcon from "@/assets/buttons/back.svg";
         freeCount: 5,
         recommendCount: formData.referralCode ? 1 : 0
       });
-      showAlert("회원가입이 완료되었습니다.");
       router.push(`/signup/complete?name=${formData.nickname}`);
     } catch (error) {
       console.error('회원가입 실패:', error);
@@ -224,7 +239,8 @@ return(
                 <Button
                   type="button"
                   onClick={handleSendVerification}
-                  disabled={isEmailVerified}
+                  disabled={!canResend || isEmailVerified}
+
                 >
                   인증번호 전송
                 </Button>
@@ -232,9 +248,12 @@ return(
             </Field>
 
             {/* 인증코드 */}
+            {showVerificationField && (
             <Field>
-              <Label>인증번호</Label>
+              <Label1>인증번호</Label1>
+              <Column>
               <Row>
+                <InputWrapper>
                 <Input
                   id="verificationCode"
                   value={formData.verificationCode}
@@ -242,27 +261,39 @@ return(
                   disabled={isEmailVerified}
                   placeholder="인증번호를 입력하세요"
                 />
-                <Button type="button" onClick={handleVerifyEmail}>
-                  확인
-                </Button>
+                  {timer !== null && (
+                 <TimerTextInside>
+                  {Math.floor(timer / 60)}:
+                  {(timer % 60).toString().padStart(2, "0")}
+                 </TimerTextInside>
+                 )}
+                </InputWrapper>
+                <Button type="button" onClick={handleVerifyEmail}> 확인 </Button>
               </Row>
+               {!isEmailVerified && (
+                <TimerText>인증번호를 입력하세요</TimerText>
+                )}
+                </Column>
             </Field>
+             )} 
 
             {/* 닉네임 */}
             <Field>
               <Label1>닉네임</Label1>
-              <Column>
-              <Row>
-              <Input
-                id="nickname"
-                value={formData.nickname}
-                onChange={handleChange}
-                placeholder="닉네임을 입력하세요 (필수)"
-              />
-              {/* <Button type="button">
-                  중복 확인
-                </Button> */}
-              </Row>
+              <Column>  
+               <InputWrapper>
+                  <Input
+                  id="nickname"
+                  value={formData.nickname}
+                  onChange={handleChange}
+                  placeholder="닉네임을 입력하세요 (필수)"
+                />
+            {formData.nickname.length > 0 && (
+             <IconWrapper>
+              {nicknameValid ? <ValidIcon /> : <InvalidIcon />}
+             </IconWrapper>
+            )}
+              </InputWrapper>
               <Text>최소 4~8자, 한영 문자, 숫자 포함</Text>
               </Column>
               
@@ -272,6 +303,7 @@ return(
             <Field>
               <Label1>비밀번호</Label1>
               <Column>
+              <InputWrapper>
               <Input
                 id="password"
                 type="password"
@@ -279,6 +311,12 @@ return(
                 onChange={handleChange}
                 placeholder="비밀번호를 입력하세요 (필수)"
               />
+              {formData.nickname.length > 0 && (
+             <IconWrapper>
+              {passwordValid ? <ValidIcon /> : <InvalidIcon />}
+             </IconWrapper>
+            )}
+              </InputWrapper>
               <Text>최소 8자 이상, 영문, 숫자, 특수 기호 포함 </Text>
               </Column>
             </Field>
@@ -286,6 +324,7 @@ return(
             {/* 비밀번호 확인 */}
             <Field>
               <Label>비밀번호 확인</Label>
+              <InputWrapper>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -293,6 +332,12 @@ return(
                 onChange={handleChange}
                 placeholder="비밀번호를 다시 입력하세요 (필수)"
               />
+              {formData.nickname.length > 0 && (
+             <IconWrapper>
+              {confirmPasswordValid ? <ValidIcon /> : <InvalidIcon />}
+             </IconWrapper>
+            )}
+            </InputWrapper>
             </Field>
 
             {/* 대학교 */}
@@ -427,7 +472,7 @@ const Card = styled.div`
   border-radius: 18px;
   color: white;
    @media (max-width: 768px) {
-    width: 90%;
+    width: 80%;
     align-items: center;
     justify-content: center;
 
@@ -456,7 +501,7 @@ const Field = styled.div`
     @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
-    width: 356px;
+    width: 100%;
   }
 `;
 
@@ -474,6 +519,7 @@ const Label = styled.label`
     margin-right: 0px;
     justify-content: flex-start;
     margin-bottom: 5px;
+    width: 100%;
 
   }
 `;
@@ -493,6 +539,7 @@ const Label1 = styled.label`
     margin-right: 0px;
     justify-content: flex-start;
     margin-bottom: 5px;
+    width: 100%;
   }
 `;
 
@@ -511,22 +558,42 @@ const Input = styled.input`
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.60);
   background: rgba(255, 255, 255, 0.30);
-  color:white;
+  color: white;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 140%;
   width: 328px;
   height: 41px;
-    @media (max-width: 768px) {
-    //width: 100%;
-    max-width: 290px;
-    min-width: 180px;
-    //width: auto;         
+  padding-right: 40px;
+    @media (max-width: 768px) {        
     font-size: 14px;
     height: 41px;
+    width: auto;
+    width: 100%;
 
   }
+`;
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 328px;
+
+  @media (max-width: 768px) {
+    //max-width: 290px;
+    width:100%;
+    //min-width: 180px;
+  }
+`;
+
+const IconWrapper = styled.div`
+ position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Button = styled.button`
@@ -541,6 +608,11 @@ const Button = styled.button`
   font-weight: 600;
   line-height: 150%;
   cursor: pointer;
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.20);
+  }
   @media (max-width: 768px) {
     padding: 0 12px;
     font-size: 14px;
@@ -568,7 +640,7 @@ const SubmitButton = styled.button`
   margin-left: 170px;
   cursor: pointer;
   @media (max-width: 768px) {
-    margin: 0 auto;
+    margin: 30px auto;
   }
 
 `;
@@ -580,9 +652,9 @@ const Text = styled.div`
   font-weight: 400;
   line-height: 140%;
   margin-right: 10px;
+  margin-top: 2px;
   @media (max-width: 768px) {
   text-align: right;     
-  margin-right: 68px;
   }
 
 `
@@ -612,5 +684,40 @@ const BottomText = styled.div`
     &:hover {
       opacity:1;
     }
+  }
+  @media (max-width: 768px) {
+    margin-top: 10px;
+  }
+`;
+
+
+
+const TimerTextInside = styled.div`
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.7);
+  font-size: 16px;
+  font-weight: 400;
+  pointer-events: none; /* 입력 방해 X */
+    @media (max-width: 768px) {
+      font-size: 14px;
+
+  }
+`;
+
+const TimerText = styled.div`
+  color: var(--white-100, #FFF);
+  text-align: right;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-right: 110px;
+  margin-top: 2px;
+  @media (max-width: 768px) {
+  text-align: right;     
+  margin-right: 80px;
   }
 `;

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import styled from "styled-components";
+//import CardImg from "@/assets/icons/card.svg";
 
  const Home=() => {
   const { isAuthenticated } = useUser();
@@ -60,8 +61,8 @@ const Card = styled.div`
   padding-top: 44px;
    @media (max-width: 768px) {
     width: 90%;
-    height: 453px;
-    padding: 30px 16px;
+    height: auto;
+    padding: 52px 30px 40px 30px;
     margin: 0 auto;
   }
 `;
