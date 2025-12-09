@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import { useUser } from '@/context/UserContext';
@@ -15,6 +15,7 @@ export default function Header() {
   const { useLogout } = useAuth();
   const logoutMutation = useLogout();
   const { user, isLoading: userLoading, isAuthenticated } = useUser();
+  const profileRef = useRef<HTMLDivElement>(null);
 
   // 디버깅: 로그인 상태 확인
   useEffect(() => {
@@ -28,6 +29,22 @@ export default function Header() {
       // axiosInstance의 Authorization 헤더 설정은 lib/axios.ts에서 처리
     }
   }, []);
+
+   useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    }
+
+    if (isProfileOpen) {
+      window.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [isProfileOpen]);
 
   const handleLogout = async () => {
     try {
@@ -57,7 +74,7 @@ export default function Header() {
 
           {/* 프로필 */}
           {isAuthenticated ? (
-            <ProfileWrapper>
+            <ProfileWrapper ref={profileRef}>
               <ProfileButton onClick={() => setIsProfileOpen(!isProfileOpen)}>
                 <Nickname>{user?.nickname ?? '사용자'}</Nickname>
                 <UserIcon />
@@ -191,8 +208,8 @@ const Dropdown = styled.div`
   border-radius: 10px;
   background: var(--bright-navy-4, rgba(50, 116, 239, 0.04));
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(12px); 
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px); 
   @media (max-width: 768px) {
     padding: 4px 0;
   }
