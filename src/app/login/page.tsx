@@ -137,7 +137,7 @@ const Content = styled.div`
 
 const BackButton = styled(Link)`
   position: absolute;
-  top: 140px;
+  top: 83px;
   left: 120px;
   z-index: 10;
   color: white;
@@ -153,13 +153,16 @@ const BackButton = styled(Link)`
 const CenterContainer = styled.div`
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  //align-items: center;
   justify-content: center;
+  padding-top: 250px;
+  padding-right: 75px;
   @media (max-width: 768px) {
     width: 90%;
     margin: 0 auto;
     align-items: start;
-    padding-top: 97px;
+    padding-right: 70px;
+    padding-top: 98px;
   }
 `;
 

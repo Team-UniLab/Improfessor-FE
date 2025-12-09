@@ -185,7 +185,6 @@ import BackIcon from "@/assets/buttons/back.svg";
         freeCount: 5,
         recommendCount: formData.referralCode ? 1 : 0
       });
-      showAlert("회원가입이 완료되었습니다.");
       router.push(`/signup/complete?name=${formData.nickname}`);
     } catch (error) {
       console.error('회원가입 실패:', error);
