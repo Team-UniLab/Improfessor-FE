@@ -17,7 +17,11 @@ export default function NoticePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const notices = noticeResponse?.data || [];
+  //const notices = noticeResponse?.data || [];
+  const notices = (noticeResponse?.data || []).sort(
+  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+);
+
   const totalPages = Math.ceil(notices.length / itemsPerPage);
   // 현재 페이지에 해당하는 공지사항만 필터링
   const currentNotices = notices.slice(
@@ -172,7 +176,7 @@ const Th = styled.th<{ width?: string }>`
 `;
 
 const Td = styled.td`
-  padding: 30px 20px;
+  padding: 30px 15px;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -180,6 +184,8 @@ const Td = styled.td`
   text-align: center;
     @media (max-width: 768px) {
    font-size: 14px;
+   padding: 30px 10px;
+
   }
 `;
 
