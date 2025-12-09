@@ -47,8 +47,8 @@ export default function NoticePage() {
               <thead>
                 <tr>
                   <Th width="80">No</Th>
-                  <Th>제목</Th>
-                  <Th width="140">작성일</Th>
+                  <Th width="120">제목</Th>
+                  <Th width="100">작성일</Th>
                   <Th width="5"></Th>
                 </tr>
               </thead>
