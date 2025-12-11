@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import GAProvider from "./ga-provider";
 import Script from "next/script";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +50,9 @@ export default function RootLayout({
           transition-colors duration-200`}
       >
         {/* 페이지뷰 자동 전송 */}
-        <GAProvider />
+        <Suspense fallback={null}>
+          <GAProvider />
+           </Suspense>
         <Providers>{children}</Providers>
       </body>
     </html>

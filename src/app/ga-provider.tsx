@@ -12,10 +12,7 @@ export default function GAProvider() {
 
     const url = pathname + (searchParams.toString() ? `?${searchParams}` : "");
 
-    // 페이지뷰 전송
-    window.gtag?.("config", "G-JPHYW9NPWN", {
-      page_path: url,
-    });
+    window.gtag?.("config", "G-JPHYW9NPWN", { page_path: url });
   }, [pathname, searchParams]);
 
   return null;
