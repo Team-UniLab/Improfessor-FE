@@ -161,8 +161,9 @@ const CenterContainer = styled.div`
     width: 90%;
     margin: 0 auto;
     align-items: start;
-    padding-right: 70px;
+    padding-right: 0px;
     padding-top: 98px;
+    justify-content: center;
   }
 `;
 
